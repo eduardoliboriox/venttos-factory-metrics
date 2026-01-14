@@ -19,6 +19,26 @@
 </head>
 
 <body>
+
+
+  <!-- HEADER MOBILE -->
+<div class="header-mobile d-md-none">
+  <div class="header-mobile-left">
+    <div class="avatar-circle">EL</div>
+    <span class="user-name">Eduardo</span>
+  </div>
+
+  <div class="header-mobile-right">
+    <button class="btn-search">
+      <i class="bi bi-search"></i>
+    </button>
+    <button class="btn-notification">
+      <i class="bi bi-bell"></i>
+    </button>
+  </div>
+</div>
+
+
   <div class="app d-flex">
     <!-- SIDEBAR -->
     <nav id="sidebar" class="sidebar p-3">
@@ -48,7 +68,8 @@
     <div class="flex-fill">
 
       <!-- HEADER -->
-      <header class="header d-flex align-items-center justify-content-between px-4 py-2 border-bottom bg-white">
+      <header class="header d-none d-md-flex align-items-center justify-content-between px-4 py-2 border-bottom bg-white">
+
         <div class="d-flex align-items-center gap-3">
           <button id="btnToggleSidebar" class="btn btn-light btn-sm d-md-none">
             <i class="bi bi-list"></i>
@@ -69,34 +90,38 @@
     </div>
     
   </div>
-
-  <!-- NAV MOBILE (somente celular) -->
-<nav class="nav-mobile d-md-none">
-  <a href="{{ url_for('pages.dashboard') }}" class="nav-item">
-    <i class="bi bi-speedometer2"></i>
-    <span>Home</span>
+<!-- BOTTOM NAV MOBILE -->
+<nav class="bottom-nav d-md-none">
+  <a href="{{ url_for('pages.dashboard') }}" class="bottom-item">
+    <i class="bi bi-house bottom-icon"></i>
+    <small>Início</small>
   </a>
 
-  <a href="{{ url_for('pages.cadastro') }}" class="nav-item">
-    <i class="bi bi-plus-square"></i>
-    <span>Cadastrar</span>
+  <a href="{{ url_for('pages.modelos') }}" class="bottom-item">
+    <i class="bi bi-table bottom-icon"></i>
+    <small>Modelos</small>
   </a>
 
-  <a href="{{ url_for('pages.modelos') }}" class="nav-item">
-    <i class="bi bi-table"></i>
-    <span>Modelos</span>
+  <a href="{{ url_for('pages.cadastro') }}" class="bottom-item">
+    <i class="bi bi-plus-circle bottom-icon"></i>
+    <small>Novo</small>
   </a>
 
-  <a href="{{ url_for('pages.calculo') }}" class="nav-item">
-    <i class="bi bi-calculator"></i>
-    <span>Meta</span>
-  </a>
-
-  <a href="{{ url_for('pages.perdas') }}" class="nav-item">
-    <i class="bi bi-exclamation-triangle"></i>
-    <span>Perda</span>
+  <a href="{{ url_for('pages.calculo') }}" class="bottom-item">
+    <i class="bi bi-calculator bottom-icon"></i>
+    <small>Calcular</small>
   </a>
 </nav>
+
+<script>
+  const current = window.location.pathname.replace(/\/$/, '')
+  document.querySelectorAll('.bottom-item').forEach(link => {
+    const linkPath = new URL(link.href).pathname.replace(/\/$/, '')
+    if (linkPath === current) {
+      link.classList.add('active')
+    }
+  })
+</script>
 
 
   <!-- SCRIPTS -->
