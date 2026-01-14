@@ -1,251 +1,212 @@
-/* ======================================================
+/* =========================
    VARIÁVEIS
-====================================================== */
+========================= */
 :root {
-  --primary: #0d6efd;
-  --bg-light: #f8f9fa;
-  --bg-dark: #0f1720;
-  --card-light: #ffffff;
-  --card-dark: #0b1320;
-  --text-light: #212529;
-  --text-dark: #e6eef8;
-
+  --sidebar-width: 240px;
   --header-height: 56px;
   --bottom-nav-height: 64px;
-  --sidebar-width: 240px;
+
+  --bg: #f8f9fa;
+  --card: #ffffff;
+  --text: #212529;
+  --primary: #0d6efd;
 }
 
-/* ======================================================
-   BASE
-====================================================== */
-html, body {
-  height: 100%;
+/* =========================
+   RESET BÁSICO
+========================= */
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  background: var(--bg-light);
-  color: var(--text-light);
+  background: var(--bg);
+  color: var(--text);
   font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, Arial;
 }
 
-html[data-bs-theme="dark"] body {
-  background: var(--bg-dark);
-  color: var(--text-dark);
+/* =========================
+   ESTRUTURA GERAL
+========================= */
+.app {
+  display: flex;
+  min-height: 100vh;
 }
 
-/* ======================================================
-   MOBILE HEADER (FIXO)
-====================================================== */
+/* =========================
+   SIDEBAR DESKTOP
+========================= */
+.sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--sidebar-width);
+  height: 100vh;
+  background: #ffffff;
+  border-right: 1px solid rgba(0,0,0,0.08);
+  padding: 20px 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar .logo {
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidebar nav a {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  color: var(--text);
+}
+
+.sidebar nav a:hover,
+.sidebar nav a.active {
+  background: rgba(13,110,253,0.08);
+  color: var(--primary);
+}
+
+/* =========================
+   MAIN (DESKTOP)
+========================= */
+.main {
+  margin-left: var(--sidebar-width);
+  width: 100%;
+}
+
+/* =========================
+   HEADER DESKTOP
+========================= */
+.desktop-header {
+  position: fixed;
+  top: 0;
+  left: var(--sidebar-width);
+  right: 0;
+  height: var(--header-height);
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  z-index: 100;
+}
+
+/* =========================
+   CONTEÚDO
+========================= */
+.content {
+  padding: 20px;
+  padding-top: calc(var(--header-height) + 20px);
+}
+
+/* =========================
+   HEADER MOBILE (FIXO)
+========================= */
 .mobile-header {
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-
   height: var(--header-height);
-  background: var(--card-light);
-  border-bottom: 1px solid rgba(0,0,0,.08);
-
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0,0,0,0.08);
   display: flex;
-  align-items: center;
   justify-content: space-between;
-  padding: 0 14px;
-
-  z-index: 1100;
+  align-items: center;
+  padding: 0 16px;
+  z-index: 200;
 }
 
-html[data-bs-theme="dark"] .mobile-header {
-  background: var(--card-dark);
-  border-color: rgba(255,255,255,.08);
-}
-
-.mobile-header-left {
+.mobile-left {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
-.avatar-circle {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
+.avatar {
+  width: 34px;
+  height: 34px;
   background: var(--primary);
   color: #fff;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  border-radius: 50%;
   font-size: 14px;
-}
-
-.user-name {
-  font-weight: 600;
-  font-size: 15px;
-}
-
-.mobile-header-right {
-  display: flex;
-  gap: 10px;
-}
-
-.icon-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 10px;
-  border: none;
-  background: rgba(13,110,253,.1);
-  color: var(--primary);
-
   display: flex;
   align-items: center;
   justify-content: center;
+  font-weight: 600;
 }
 
-/* ======================================================
-   MOBILE CONTENT
-====================================================== */
-.mobile-content {
-  padding-top: calc(var(--header-height) + 10px);
-  padding-bottom: calc(var(--bottom-nav-height) + 12px);
-  padding-left: 12px;
-  padding-right: 12px;
+.mobile-right i {
+  font-size: 18px;
+  margin-left: 14px;
 }
 
-/* ======================================================
-   MOBILE BOTTOM NAV (FIXO)
-====================================================== */
+/* =========================
+   BOTTOM NAV MOBILE (SPOTIFY)
+========================= */
 .bottom-nav {
   position: fixed;
-  bottom: 10px;
-  left: 10px;
-  right: 10px;
-
+  bottom: 0;
+  left: 0;
+  right: 0;
   height: var(--bottom-nav-height);
-  background: var(--card-light);
-  border-radius: 18px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.15);
-
+  background: #ffffff;
+  border-top: 1px solid rgba(0,0,0,0.08);
   display: flex;
   justify-content: space-around;
   align-items: center;
-
-  z-index: 1100;
+  z-index: 200;
 }
 
-html[data-bs-theme="dark"] .bottom-nav {
-  background: var(--card-dark);
-}
-
-.bottom-item {
-  flex: 1;
-  text-align: center;
+.bottom-nav a {
   text-decoration: none;
-
+  color: var(--text);
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 4px;
-
-  color: #8a8a8a;
   font-size: 11px;
 }
 
-.bottom-item i {
-  font-size: 22px;
+.bottom-nav i {
+  font-size: 20px;
+  margin-bottom: 2px;
 }
 
-.bottom-item.active {
-  color: var(--primary);
-  font-weight: 600;
-}
-
-/* ======================================================
-   DESKTOP LAYOUT
-====================================================== */
-.app {
-  min-height: 100vh;
-}
-
-.sidebar {
-  width: var(--sidebar-width);
-  background: linear-gradient(180deg, rgba(13,110,253,.08), transparent);
-  border-right: 1px solid rgba(0,0,0,.06);
-  padding: 20px;
-}
-
-html[data-bs-theme="dark"] .sidebar {
-  border-color: rgba(255,255,255,.08);
-}
-
-.sidebar-brand {
-  text-align: center;
-  margin-bottom: 24px;
-}
-
-.sidebar .nav-link {
-  color: inherit;
-  padding: 10px 12px;
-  border-radius: 10px;
-  margin-bottom: 4px;
-}
-
-.sidebar .nav-link:hover,
-.sidebar .nav-link.active {
-  background: rgba(13,110,253,.12);
+.bottom-nav a.active {
   color: var(--primary);
 }
 
-.desktop-main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.desktop-header {
-  height: 56px;
-  border-bottom: 1px solid rgba(0,0,0,.06);
-  background: var(--card-light);
-
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-}
-
-html[data-bs-theme="dark"] .desktop-header {
-  background: var(--card-dark);
-  border-color: rgba(255,255,255,.08);
-}
-
-.desktop-content {
-  padding: 20px;
-}
-
-/* ======================================================
-   CARDS / TABELAS
-====================================================== */
-.card {
-  background: var(--card-light);
-  border: none;
-  border-radius: 14px;
-  box-shadow: 0 6px 18px rgba(0,0,0,.06);
-}
-
-html[data-bs-theme="dark"] .card {
-  background: var(--card-dark);
-}
-
-
-/* Espaço extra no conteúdo para não ficar atrás do menu */
+/* =========================
+   AJUSTES MOBILE
+========================= */
 @media (max-width: 767px) {
-  main {
-    padding-bottom: 80px;
-  }
-}
 
-@media(max-width: 767px){
   .sidebar {
     display: none;
   }
-}
 
+  .main {
+    margin-left: 0;
+  }
+
+  .content {
+    padding-top: calc(var(--header-height) + 16px);
+    padding-bottom: calc(var(--bottom-nav-height) + 16px);
+  }
+
+  .desktop-header {
+    display: none;
+  }
+}
