@@ -88,7 +88,6 @@ def calcular_meta_smt(tempo_montagem, blank):
         }
     }
 
-
 def calcular_tempo_smt_inverso(meta_hora, blank):
     try:
         meta = float(meta_hora)
