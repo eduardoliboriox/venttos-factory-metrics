@@ -10,18 +10,8 @@
   <!-- ===================== TABELA DE MODELOS ===================== -->
   <div class="card mb-4 p-3 shadow-sm">
     <h5 class="mb-3"><i class="bi bi-table"></i> Modelos Cadastrados</h5>
-    <table id="tblModelos" class="table table-striped table-bordered nowrap" style="width:100%">
-      <thead>
-        <tr>
-          <th>Código</th>
-          <th>Cliente</th>
-          <th>Setor</th>
-          <th>Meta/Hora</th>
-          <th>Pessoas</th>
-        </tr>
-      </thead>
-      <tbody></tbody>
-    </table>
+    <div id="listaModelos" class="row g-3"></div>
+
   </div>
 
   <!-- ===================== EDITAR MODELO ===================== -->
@@ -76,21 +66,39 @@
 $(document).ready(function(){
 
   // Inicializa DataTable
-  const tabela = $('#tblModelos').DataTable({
-      ajax: '/api/listar',
-      columns: [
-          {data: 'codigo'},
-          {data: 'cliente'},
-          {data: 'setor'},
-          {data: 'meta_padrao'},
-          {data: 'pessoas_padrao'}
-      ],
-      responsive: true,
-      pageLength: 10,
-      language: {
-          url: "//cdn.datatables.net/plug-ins/1.13.6/i18n/pt-BR.json"
-      }
-  });
+  function carregarModelos() {
+    fetch('/api/listar')
+      .then(resp => resp.json())
+      .then(data => {
+        const container = $('#listaModelos');
+        container.empty();
+
+        if (data.length === 0) {
+          container.html('<p class="text-muted">Nenhum modelo cadastrado.</p>');
+          return;
+        }
+
+        data.forEach(m => {
+          container.append(`
+            <div class="col-md-4 col-lg-3">
+              <div class="card-modelo shadow-sm">
+                <div class="d-flex justify-content-between">
+                  <div class="codigo">${m.codigo}</div>
+                  <div class="cliente">${m.cliente}</div>
+                </div>
+
+                <div class="linha"><strong>Setor:</strong> ${m.setor}</div>
+                <div class="linha"><strong>Meta/hora:</strong> ${m.meta_padrao}</div>
+                <div class="linha"><strong>Fase:</strong> ${m.fase || '-'}</div>
+              </div>
+            </div>
+          `);
+        });
+      });
+  }
+
+  carregarModelos();
+
 
   // Atualiza selects após ação
   function atualizarSelects() {
@@ -128,7 +136,7 @@ $(document).ready(function(){
       const fd = new FormData(this);
       await fetch('/api/editar', {method:'POST', body:fd});
       mostrarMensagem('Modelo atualizado com sucesso!', 'success');
-      tabela.ajax.reload(null, false);
+      carregarModelos();
       atualizarSelects();
   });
 
@@ -138,7 +146,7 @@ $(document).ready(function(){
       const fd = new FormData(this);
       await fetch('/api/excluir', {method:'POST', body:fd});
       mostrarMensagem('Modelo excluído com sucesso!', 'danger');
-      tabela.ajax.reload(null, false);
+      carregarModelos();
       atualizarSelects();
   });
 

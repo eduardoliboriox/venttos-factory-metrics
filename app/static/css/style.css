@@ -215,3 +215,30 @@ body {
     display: none;
   }
 }
+
+/* ==========================
+   CARTÕES DE MODELO
+========================= */
+.card-modelo {
+  border: 1px solid #dee2e6;
+  border-radius: 10px;
+  padding: 16px;
+  background: #fff;
+  height: 100%;
+}
+
+.card-modelo .codigo {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+.card-modelo .cliente {
+  font-size: 0.95rem;
+  color: #6c757d;
+  text-align: right;
+}
+
+.card-modelo .linha {
+  margin-top: 6px;
+  font-size: 0.95rem;
+}
