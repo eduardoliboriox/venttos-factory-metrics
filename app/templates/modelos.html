@@ -67,7 +67,7 @@ $(document).ready(function(){
 
   // Inicializa DataTable
   function carregarModelos() {
-    fetch('/api/listar')
+    fetch('/api/modelos')
       .then(resp => resp.json())
       .then(data => {
         const container = $('#listaModelos');
@@ -88,8 +88,8 @@ $(document).ready(function(){
                 </div>
 
                 <div class="linha"><strong>Setor:</strong> ${m.setor}</div>
-                <div class="linha"><strong>Meta/hora:</strong> ${m.meta_padrao}</div>
-                <div class="linha"><strong>Fase:</strong> ${m.fase || '-'}</div>
+                <div class="linha"><strong>Meta/hora:</strong> ${m.meta}</div>
+                <div class="linha"><strong>Fase:</strong> ${m.fase}</div>
               </div>
             </div>
           `);
@@ -97,25 +97,26 @@ $(document).ready(function(){
       });
   }
 
+
   carregarModelos();
 
 
   // Atualiza selects após ação
   function atualizarSelects() {
-      fetch('/api/listar')
-        .then(resp => resp.json())
-        .then(data => {
-            const editar = $('#selectEditar');
-            const excluir = $('#selectExcluir');
-            if (data.length > 0) {
-                editar.empty();
-                excluir.empty();
-                data.forEach(d => {
-                    editar.append(`<option>${d.codigo}</option>`);
-                    excluir.append(`<option>${d.codigo}</option>`);
-                });
-            }
+    fetch('/api/modelos')
+      .then(resp => resp.json())
+      .then(data => {
+        const editar = $('#selectEditar');
+        const excluir = $('#selectExcluir');
+
+        editar.empty();
+        excluir.empty();
+
+        data.forEach(d => {
+          editar.append(`<option>${d.codigo}</option>`);
+          excluir.append(`<option>${d.codigo}</option>`);
         });
+      });
   }
 
   // Função para mostrar mensagens temporárias

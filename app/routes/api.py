@@ -6,7 +6,7 @@ bp = Blueprint("api", __name__)
 
 @bp.route("/modelos", methods=["GET"])
 def listar():
-    return jsonify({"data": modelos_service.listar_modelos()})
+    return jsonify(modelos_service.listar_modelos())
 
 @bp.route("/modelos", methods=["POST"])
 def cadastrar():
