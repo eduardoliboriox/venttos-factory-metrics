@@ -135,7 +135,7 @@ $(document).ready(function(){
   $('#editarForm').on('submit', async function(e){
       e.preventDefault();
       const fd = new FormData(this);
-      await fetch('/api/modelos', {method:'POST', body:fd});
+      await fetch('/api/modelos', {method:'PUT', body:fd});
       mostrarMensagem('Modelo atualizado com sucesso!', 'success');
       carregarModelos();
       atualizarSelects();

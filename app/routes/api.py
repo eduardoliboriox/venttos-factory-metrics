@@ -12,7 +12,6 @@ def listar():
 def atualizar():
     return jsonify(modelos_service.atualizar_modelo(request.form))
 
-
 @bp.route("/modelos", methods=["POST"])
 def cadastrar():
     dados = request.form
