@@ -30,10 +30,6 @@
         <label class="form-label">Nova Meta/Hora</label>
         <input class="form-control" name="nova_meta" type="number" placeholder="Deixe vazio para manter">
       </div>
-      <div class="col-md-3">
-        <label class="form-label">Novas Pessoas</label>
-        <input class="form-control" name="novas_pessoas" type="number" placeholder="Deixe vazio para manter">
-      </div>
       <div class="col-md-3 d-flex align-items-end">
         <button class="btn btn-warning w-100">Atualizar</button>
       </div>
@@ -89,6 +85,7 @@ $(document).ready(function(){
 
                 <div class="linha"><strong>Setor:</strong> ${m.setor}</div>
                 <div class="linha"><strong>Meta/hora:</strong> ${m.meta}</div>
+                <div class="linha"><strong>Tempo de montagem:</strong> ${m.tempo_montagem ?? '-'} s</div>
                 <div class="linha"><strong>Fase:</strong> ${m.fase}</div>
               </div>
             </div>
