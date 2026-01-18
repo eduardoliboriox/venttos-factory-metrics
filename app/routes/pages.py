@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request
-from app.services.modelos_service import listar_codigos, calcular_perda_producao
+from app.services.modelos_service import listar_codigos, calcular_perda_producao, resumo_dashboard
 
 bp = Blueprint("pages", __name__)
 
@@ -7,8 +7,8 @@ bp = Blueprint("pages", __name__)
 @bp.route("/")
 @bp.route("/dashboard")
 def dashboard():
-    return render_template("dashboard.html")
-
+    dados = resumo_dashboard()
+    return render_template("dashboard.html", **dados)
 
 @bp.route("/cadastro")
 def cadastro():

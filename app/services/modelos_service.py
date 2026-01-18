@@ -1,6 +1,27 @@
 from app.repositories import modelos_repository
 import math
 
+def resumo_dashboard():
+    modelos = modelos_repository.listar_modelos()
+
+    total = len(modelos)
+
+    por_setor = {}
+    por_fase = {}
+
+    for m in modelos:
+        setor = m["setor"]
+        fase = m["fase"]
+
+        por_setor[setor] = por_setor.get(setor, 0) + 1
+        por_fase[fase] = por_fase.get(fase, 0) + 1
+
+    return {
+        "total_modelos": total,
+        "por_setor": por_setor,
+        "por_fase": por_fase
+    }
+
 def listar_codigos():
     return modelos_repository.listar_codigos()
 
