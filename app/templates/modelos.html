@@ -81,11 +81,19 @@
       <i class="bi bi-trash3 fw-bold"></i> Excluir Modelo
     </h5>
 
-    <form id="excluirForm" class="row g-3">
+<form id="excluirForm" class="row g-3">
+
+  <div class="col-md-3">
+    <label class="form-label fw-bold">Cliente</label>
+    <select class="form-select" id="filtroClienteExcluir">
+      <option value="">Selecione</option>
+    </select>
+  </div>
+
       <div class="col-md-4">
         <label class="form-label fw-bold">Modelo (código + fase)</label>
         <select class="form-select" name="modelo" id="selectExcluir" required>
-          <option value="">Selecione</option>
+          <option value="">Selecione o cliente primeiro</option>
         </select>
       </div>
 
@@ -146,19 +154,17 @@ $(document).ready(function(){
   function popularFiltros() {
     const clientes = [...new Set(modelosCache.map(m => m.cliente))];
     const filtroCliente = $('#filtroCliente');
+    const filtroClienteExcluir = $('#filtroClienteExcluir');
     const selectExcluir = $('#selectExcluir');
 
     filtroCliente.empty().append('<option value="">Selecione</option>');
     clientes.forEach(c => filtroCliente.append(`<option value="${c}">${c}</option>`));
 
-    selectExcluir.empty().append('<option value="">Selecione</option>');
-    modelosCache.forEach(m => {
-      selectExcluir.append(`
-        <option value="${m.codigo}|${m.fase}">
-          ${m.codigo} — ${m.fase}
-        </option>
-      `);
+    filtroClienteExcluir.empty().append('<option value="">Selecione</option>');
+    clientes.forEach(c => {
+      filtroClienteExcluir.append(`<option value="${c}">${c}</option>`);
     });
+
   }
 
   $('#filtroCliente').on('change', function(){
@@ -171,6 +177,28 @@ $(document).ready(function(){
       .filter(m => m.cliente === cliente)
       .forEach(m => {
         selectEditar.append(`
+          <option value="${m.codigo}|${m.fase}">
+            ${m.codigo} — ${m.fase}
+          </option>
+        `);
+      });
+  });
+
+  $('#filtroClienteExcluir').on('change', function(){
+    const cliente = $(this).val();
+    const selectExcluir = $('#selectExcluir');
+
+    selectExcluir.empty();
+
+    if (!cliente) {
+      selectExcluir.append('<option value="">Selecione o cliente primeiro</option>');
+      return;
+    }
+
+    modelosCache
+      .filter(m => m.cliente === cliente)
+      .forEach(m => {
+        selectExcluir.append(`
           <option value="${m.codigo}|${m.fase}">
             ${m.codigo} — ${m.fase}
           </option>
