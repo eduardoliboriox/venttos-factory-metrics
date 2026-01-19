@@ -81,6 +81,11 @@ body {
   color: #000000;
 }
 
+.sidebar .logo img {
+  width: 48px;
+  height: auto;
+}
+
 .sidebar nav a:hover,
 .sidebar nav a.active {
   background: rgba(13,110,253,0.08);
