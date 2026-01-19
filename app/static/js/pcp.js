@@ -1,17 +1,19 @@
 
 async function calcularPCP() {
   const turnos = [];
-  document.querySelectorAll('input[type=checkbox]:checked').forEach(c => {
+  document.querySelectorAll('#pcpTurnos input[type=checkbox]:checked').forEach(c => {
     turnos.push(parseInt(c.value));
   });
 
+  const num = v => v === "" ? 0 : Number(v);
+
   const payload = {
-    total_op: document.getElementById("totalOp").value,
-    produzido: document.getElementById("produzido").value,
+    total_op: num(document.getElementById("totalOp").value),
+    produzido: num(document.getElementById("produzido").value),
+    meta_hora: num(document.getElementById("metaHora").value),
+    blank: num(document.getElementById("blank").value),
     hora_inicio: document.getElementById("horaInicio").value,
-    meta_hora: document.getElementById("metaHora").value,
-    blank: document.getElementById("blank").value,
-    turnos: turnos,
+    turnos,
     refeicao: document.getElementById("refeicao").value === "true"
   };
 
@@ -27,6 +29,8 @@ async function calcularPCP() {
 
   if (data.conclusao) {
     html += `<h5 class="text-success">Conclusão prevista: ${data.conclusao}</h5>`;
+  } else {
+    html += `<h5 class="text-warning">Conclusão não calculada (verifique dados ou turnos)</h5>`;
   }
 
   if (data.timeline) {
