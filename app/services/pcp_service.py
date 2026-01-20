@@ -1,45 +1,57 @@
-from datetime import datetime, timedelta
-import math
+from app.extensions import get_db
 
-# ======================================================
-# DEFINIÇÃO DOS TURNOS
-# ======================================================
-TURNOS = [
-    # ---------- 1º TURNO ----------
-    {"turno": 1, "ref": "H-01", "inicio": "07:00", "fim": "08:00", "refeicao": False},
-    {"turno": 1, "ref": "H-02", "inicio": "08:00", "fim": "09:00", "refeicao": False},
-    {"turno": 1, "ref": "H-03", "inicio": "09:00", "fim": "10:00", "refeicao": False},
-    {"turno": 1, "ref": "H-04", "inicio": "10:00", "fim": "11:00", "refeicao": False},
-    {"turno": 1, "ref": "H-05", "inicio": "11:00", "fim": "12:00", "refeicao": True},
-    {"turno": 1, "ref": "H-06", "inicio": "12:00", "fim": "13:00", "refeicao": False},
-    {"turno": 1, "ref": "H-07", "inicio": "13:00", "fim": "14:00", "refeicao": False},
-    {"turno": 1, "ref": "H-08", "inicio": "14:00", "fim": "15:00", "refeicao": False},
-    {"turno": 1, "ref": "H-09", "inicio": "15:00", "fim": "16:00", "refeicao": False},
-    {"turno": 1, "ref": "H-10", "inicio": "16:00", "fim": "16:48", "refeicao": False},
+def resumo_dashboard():
+    with get_db() as conn:
+        with conn.cursor() as cur:
+            cur.execute("""
+                SELECT
+                    linha,
+                    SUM(hc_padrao)   AS hc_planejado,
+                    SUM(hc_real)     AS hc_real
+                FROM lancamentos
+                WHERE data = CURRENT_DATE
+                GROUP BY linha
+                ORDER BY linha
+            """)
 
-    # ---------- 2º TURNO ----------
-    {"turno": 2, "ref": "H-01", "inicio": "16:48", "fim": "17:00", "refeicao": False},
-    {"turno": 2, "ref": "H-02", "inicio": "17:00", "fim": "18:00", "refeicao": False},
-    {"turno": 2, "ref": "H-03", "inicio": "18:00", "fim": "19:00", "refeicao": False},
-    {"turno": 2, "ref": "H-04", "inicio": "19:00", "fim": "20:00", "refeicao": False},
-    {"turno": 2, "ref": "H-05", "inicio": "20:00", "fim": "21:00", "refeicao": True},
-    {"turno": 2, "ref": "H-06", "inicio": "21:00", "fim": "22:00", "refeicao": False},
-    {"turno": 2, "ref": "H-07", "inicio": "22:00", "fim": "23:00", "refeicao": False},
-    {"turno": 2, "ref": "H-08", "inicio": "23:00", "fim": "00:00", "refeicao": False},
-    {"turno": 2, "ref": "H-09", "inicio": "00:00", "fim": "01:00", "refeicao": False},
-    {"turno": 2, "ref": "H-10", "inicio": "01:00", "fim": "02:00", "refeicao": False},
-    {"turno": 2, "ref": "H-11", "inicio": "02:00", "fim": "02:35", "refeicao": False},
+            rows = cur.fetchall()
 
-    # ---------- 3º TURNO ----------
-    {"turno": 3, "ref": "H-01", "inicio": "02:35", "fim": "03:00", "refeicao": False},
-    {"turno": 3, "ref": "H-02", "inicio": "03:00", "fim": "04:00", "refeicao": True},
-    {"turno": 3, "ref": "H-03", "inicio": "04:00", "fim": "05:00", "refeicao": False},
-    {"turno": 3, "ref": "H-04", "inicio": "05:00", "fim": "06:00", "refeicao": False},
-    {"turno": 3, "ref": "H-05", "inicio": "06:00", "fim": "07:00", "refeicao": False},
-]
+    dados = []
+    total_planejado = 0
+    total_real = 0
 
-# ======================================================
-# FUNÇÕES AUXILIARES
-# ======================================================
-def _parse_time(hhmm):
-    return datetime.strptime(hhmm, "%H:%M")
+    for r in rows:
+        absenteismo = 0
+        if r["hc_planejado"] > 0:
+            absenteismo = round(
+                (r["hc_planejado"] - r["hc_real"]) / r["hc_planejado"] * 100, 2
+            )
+
+        status = "OK" if r["hc_real"] >= r["hc_planejado"] else "CRÍTICO"
+
+        dados.append({
+            "nome": r["linha"],
+            "hc_planejado": r["hc_planejado"],
+            "hc_real": r["hc_real"],
+            "absenteismo": absenteismo,
+            "status": status
+        })
+
+        total_planejado += r["hc_planejado"]
+        total_real += r["hc_real"]
+
+    abs_total = 0
+    if total_planejado > 0:
+        abs_total = round(
+            (total_planejado - total_real) / total_planejado * 100, 2
+        )
+
+    return {
+        "dados": dados,
+        "kpis": {
+            "hc_planejado": total_planejado,
+            "hc_real": total_real,
+            "absenteismo": abs_total,
+            "linhas": len(dados)
+        }
+    }
