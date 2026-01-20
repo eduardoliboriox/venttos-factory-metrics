@@ -16,3 +16,7 @@ def cadastro():
 @bp.route("/modelos")
 def modelos():
     return render_template("modelos.html", codigos=listar_codigos())
+
+@bp.route("/calculo")
+def calculo():
+    return render_template("calcular.html", codigos=listar_codigos())
