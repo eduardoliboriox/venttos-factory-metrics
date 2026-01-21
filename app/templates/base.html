@@ -38,23 +38,28 @@
       <img src="{{ url_for('static', filename='images/logos/logo-sidebar-desktop.png') }}" alt="Venttos">
     </div>
 
-    <nav>
-      <a href="{{ url_for('pages.inicio') }}">
-        <i class="bi bi-house"></i> Início
-      </a>
-    
-      <a href="{{ url_for('pages.lancamento') }}">
-        <i class="bi bi-plus-square"></i> Lançamentos
-      </a>
-    
-      <a href="{{ url_for('pages.dashboard') }}">
-        <i class="bi bi-speedometer2"></i> Dashboard
-      </a>
-    
-      <a href="{{ url_for('pages.cargos') }}">
-        <i class="bi bi-people"></i> Cargos
-      </a>
-    </nav>
+  <nav>
+    <a href="{{ url_for('pages.inicio') }}"
+       class="{% if request.endpoint == 'pages.inicio' %}active{% endif %}">
+      <i class="bi bi-house"></i> Início
+    </a>
+  
+    <a href="{{ url_for('pages.lancamento') }}"
+       class="{% if request.endpoint == 'pages.lancamento' %}active{% endif %}">
+      <i class="bi bi-plus-square"></i> Lançamentos
+    </a>
+  
+    <a href="{{ url_for('pages.dashboard') }}"
+       class="{% if request.endpoint == 'pages.dashboard' %}active{% endif %}">
+      <i class="bi bi-speedometer2"></i> Dashboard
+    </a>
+  
+    <a href="{{ url_for('pages.cargos') }}"
+       class="{% if request.endpoint == 'pages.cargos' %}active{% endif %}">
+      <i class="bi bi-people"></i> Cargos
+    </a>
+  </nav>
+
 
   </aside>
 
