@@ -51,12 +51,13 @@
 
     <div class="col-md-4">
       <label class="form-label">HC Padrão</label>
-      <input type="number" name="hc_padrao" class="form-control" required>
+      <input type="number" name="hc_padrao" class="form-control" required
+             oninput="atualizarHCReal()">
     </div>
 
     <div class="col-md-4">
       <label class="form-label">HC Real</label>
-      <input type="number" name="hc_real" class="form-control" required>
+      <input type="number" name="hc_real" class="form-control" readonly>
     </div>
 
     <div class="col-md-4">
@@ -72,21 +73,21 @@
 
       <div class="col-md-6">
         <label class="form-label">Cargo</label>
-            <select id="cargo" class="form-select">
-              <option value="">Selecione</option>
-            
-              <optgroup label="Área Técnica">
-                {% for c in cargos_tecnica %}
-                  <option value="{{ c.id }}">{{ c.nome }}</option>
-                {% endfor %}
-              </optgroup>
-            
-              <optgroup label="Produção">
-                {% for c in cargos_producao %}
-                  <option value="{{ c.id }}">{{ c.nome }}</option>
-                {% endfor %}
-              </optgroup>
-            </select>
+        <select id="cargo" class="form-select">
+          <option value="">Selecione</option>
+
+          <optgroup label="Área Técnica">
+            {% for c in cargos_tecnica %}
+              <option value="{{ c.id }}">{{ c.nome }}</option>
+            {% endfor %}
+          </optgroup>
+
+          <optgroup label="Produção">
+            {% for c in cargos_producao %}
+              <option value="{{ c.id }}">{{ c.nome }}</option>
+            {% endfor %}
+          </optgroup>
+        </select>
       </div>
 
       <div class="col-md-3">
@@ -142,14 +143,15 @@ function addCargo() {
     });
 
     document.getElementById("listaCargos").innerHTML += `
-        <li class="list-group-item d-flex justify-content-between">
+        <li class="list-group-item d-flex justify-content-between align-items-center">
             ${cargoNome}
             <span class="badge bg-primary">${qtd}</span>
         </li>
     `;
 
-    // atualiza o hidden corretamente
     document.getElementById("cargosJson").value = JSON.stringify(cargos);
+
+    atualizarHCReal();
 
     cargoSelect.value = "";
     qtdInput.value = "";
@@ -160,7 +162,6 @@ function addCargo() {
 document.getElementById("formLancamento").addEventListener("submit", async function(e){
     e.preventDefault();
 
-    // garante envio dos cargos
     document.getElementById("cargosJson").value = JSON.stringify(cargos);
 
     const formData = new FormData(this);
@@ -200,6 +201,14 @@ document.getElementById("formLancamento").addEventListener("submit", async funct
         console.error(err);
     }
 });
+</script>
+
+<script>
+function atualizarHCReal(){
+  const hcPadrao = parseInt(document.querySelector("[name='hc_padrao']").value || 0);
+  const totalFaltas = cargos.reduce((s, c) => s + c.quantidade, 0);
+  document.querySelector("[name='hc_real']").value = Math.max(hcPadrao - totalFaltas, 0);
+}
 </script>
 
 {% endblock %}
