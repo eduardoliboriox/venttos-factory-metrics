@@ -105,6 +105,7 @@ def resumo_dashboard(filtros):
         "ranking_linhas": ranking_linhas[:5],
         "ranking_setor": ranking_setor,
         "ranking_filial": ranking_filial,
+        "ranking_cargos": ranking_cargos(filtros),  # ✅ chamada direta
         "kpis": {
             "hc_planejado": total_p,
             "hc_real": total_r,
@@ -113,13 +114,18 @@ def resumo_dashboard(filtros):
         }
     }
 
+
 def ranking_cargos(filtros):
     where = []
     params = []
 
-    if filtros.get("data_inicial") and filtros.get("data_final"):
-        where.append("l.data BETWEEN %s AND %s")
-        params += [filtros["data_inicial"], filtros["data_final"]]
+    if filtros.get("turno"):
+        where.append("l.turno = %s")
+        params.append(filtros["turno"])
+
+    if filtros.get("filial"):
+        where.append("l.filial = %s")
+        params.append(filtros["filial"])
 
     where_sql = " AND ".join(where)
     if where_sql:
@@ -141,4 +147,3 @@ def ranking_cargos(filtros):
         with conn.cursor() as cur:
             cur.execute(query, params)
             return cur.fetchall()
-
