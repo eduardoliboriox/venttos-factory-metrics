@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from app.services import modelos_service,cargos_service
+from app.services import modelos_service, cargos_service
 from app.services.lancamentos_service import criar_lancamento
 
 bp = Blueprint("api", __name__)
