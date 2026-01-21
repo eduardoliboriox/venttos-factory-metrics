@@ -22,7 +22,7 @@ def inserir(d):
                 d["absenteismo"]
             ))
         conn.commit()
-
+        
 def inserir_com_cargos(d, cargos):
     with get_db() as conn:
         with conn.cursor() as cur:
@@ -40,7 +40,8 @@ def inserir_com_cargos(d, cargos):
                 d.get("ferias", 0), d["absenteismo"]
             ))
 
-            lancamento_id = cur.fetchone()[0]
+            row = cur.fetchone()
+            lancamento_id = row["id"]
 
             for c in cargos:
                 cur.execute("""
@@ -54,4 +55,5 @@ def inserir_com_cargos(d, cargos):
                 ))
 
         conn.commit()
+
 
