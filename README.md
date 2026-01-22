@@ -114,6 +114,7 @@ project/
 ├─ tests/                     # pytest
 ├─ run.py                     # Entrypoint
 ├─ requirements.txt
+├─ LICENSE
 ├─ Procfile                   # Railway
 ├─ README.md
 ├─ .env                       # NÃO versionar
