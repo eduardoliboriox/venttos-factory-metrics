@@ -39,11 +39,11 @@ def api_criar_lancamento():
 
 @bp.route("/dashboard/linha/ferias_cargos", methods=["GET"])
 def ferias_cargos_linha_api():
-    linha = request.args.get("linha")
     filtros = {
         "data_inicial": request.args.get("data_inicial"),
         "data_final": request.args.get("data_final"),
         "turno": request.args.get("turno"),
         "filial": request.args.get("filial")
     }
-    return jsonify(cargos_ferias_por_linha(linha, filtros))
+    return jsonify(ferias_por_linha(filtros))
+
