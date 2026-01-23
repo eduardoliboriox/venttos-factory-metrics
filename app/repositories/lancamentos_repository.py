@@ -54,16 +54,15 @@ def inserir_com_cargos(d, cargos):
             for c in cargos:
                 cur.execute("""
                     INSERT INTO lancamentos_cargos
-                    (lancamento_id, cargo_id, quantidade)
-                    VALUES (%s,%s,%s)
+                    (lancamento_id, cargo_id, quantidade, tipo)
+                    VALUES (%s,%s,%s,%s)
                 """, (
                     lancamento_id,
                     c["cargo_id"],
-                    c["quantidade"]
+                    c["quantidade"],
+                    c["tipo"]
                 ))
-
         conn.commit()
-
 
 def faltas_por_cargo_e_linha(linha, filtros):
     where = ["l.linha = %s"]
