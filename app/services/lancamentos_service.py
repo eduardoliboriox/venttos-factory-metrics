@@ -10,7 +10,18 @@ def calcular_absenteismo(hc_padrao, hc_real):
 def criar_lancamento(dados):
     dados = dict(dados)
 
-    cargos = json.loads(dados.pop("cargos", "[]"))
+    faltas = json.loads(dados.pop("cargos", "[]"))
+    ferias = json.loads(dados.pop("ferias", "[]"))
+    
+    cargos = []
+    
+    for f in faltas:
+        f["tipo"] = "FALTA"
+        cargos.append(f)
+    
+    for f in ferias:
+        f["tipo"] = "FERIAS"
+        cargos.append(f)
 
     hc_padrao = int(dados["hc_padrao"])
 
