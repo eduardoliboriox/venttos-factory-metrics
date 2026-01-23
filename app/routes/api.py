@@ -1,7 +1,7 @@
 from flask import Blueprint, request, jsonify
 from app.services import modelos_service, cargos_service
 from app.services.lancamentos_service import criar_lancamento, cargos_faltas_por_linha
-from app.repositories.lancamentos_repository import ferias_por_linha
+from app.repositories.lancamentos_repository import ferias_por_linha, ferias_por_cargo_e_linha
 
 bp = Blueprint("api", __name__)
 
@@ -51,8 +51,6 @@ def cargos_por_linha_api():
 
     return jsonify(cargos_faltas_por_linha(linha, filtros))
 
-from app.repositories.lancamentos_repository import ferias_por_linha
-
 @bp.route("/dashboard/linha/ferias", methods=["GET"])
 def ferias_por_linha_api():
     filtros = {
@@ -63,5 +61,28 @@ def ferias_por_linha_api():
     }
 
     return jsonify(ferias_por_linha(filtros))
+
+def ferias_por_cargo_e_linha(linha, filtros):
+    where = ["l.linha = %s", "lc.tipo = 'FERIAS'"]
+    params = [linha]
+
+    if filtros.get("data_inicial"):
+        where.append("l.data BETWEEN %s AND %s")
+        params += [filtros["data_inicial"], filtros["data_final"]]
+
+    query = f"""
+        SELECT c.nome, SUM(lc.quantidade) AS total
+        FROM lancamentos_cargos lc
+        JOIN cargos c ON c.id = lc.cargo_id
+        JOIN lancamentos l ON l.id = lc.lancamento_id
+        WHERE {" AND ".join(where)}
+        GROUP BY c.nome
+        ORDER BY total DESC
+    """
+
+    with get_db() as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute(query, params)
+            return cur.fetchall()
 
 
