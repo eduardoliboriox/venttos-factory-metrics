@@ -3,9 +3,11 @@
 
 {% block page_title %}
 <div class="page-header">
-  <span class="title">Venttos - Factory Metrics - Dashboard & KPIs</span>
+  <!-- Título à esquerda -->
+  <span class="page-title">Venttos - Factory Metrics - Dashboard & KPIs</span>
 
-  <div class="btn-group" role="group" aria-label="Dashboard Actions">
+  <!-- Botões à direita -->
+  <div class="btn-group" role="group">
     <a href="{{ url_for('pages.dashboard') }}" class="btn btn-outline-secondary">
       <i class="bi bi-arrow-left"></i> Voltar
     </a>
@@ -17,6 +19,7 @@
     </a>
   </div>
 </div>
+
 {% endblock %}
 
 
