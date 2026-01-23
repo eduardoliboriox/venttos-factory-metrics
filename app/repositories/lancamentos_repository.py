@@ -28,10 +28,13 @@ def inserir_com_cargos(d, cargos):
 
         conn.commit()
 
-def ferias_cargos_por_linha(linha, filtros):
-    from app.extensions import get_db
-    where = ["l.linha = %s", "lc.tipo = 'FERIAS'"]
-    params = [linha]
+from app.extensions import get_db
+from psycopg.rows import dict_row
+
+def ferias_por_linha(filtros):
+    """Retorna o ranking de férias por linha"""
+    where = ["lc.tipo = 'FERIAS'"]
+    params = []
 
     if filtros.get("data_inicial") and filtros.get("data_final"):
         where.append("l.data BETWEEN %s AND %s")
@@ -45,13 +48,18 @@ def ferias_cargos_por_linha(linha, filtros):
         where.append("l.filial = %s")
         params.append(filtros["filial"])
 
+    where_sql = " AND ".join(where)
+    if where_sql:
+        where_sql = "WHERE " + where_sql
+
     query = f"""
-        SELECT c.nome, SUM(lc.quantidade) AS total
+        SELECT
+            l.linha,
+            SUM(lc.quantidade) AS total
         FROM lancamentos_cargos lc
-        JOIN cargos c ON c.id = lc.cargo_id
         JOIN lancamentos l ON l.id = lc.lancamento_id
-        WHERE {" AND ".join(where)}
-        GROUP BY c.nome
+        {where_sql}
+        GROUP BY l.linha
         ORDER BY total DESC
     """
 
