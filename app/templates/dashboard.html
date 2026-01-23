@@ -207,7 +207,10 @@
             <ul class="list-group list-group-flush" id="rankingFeriasList">
               {% for l in ranking_linhas_ferias %}
               <li class="list-group-item d-flex justify-content-between
-                {% if loop.index > 5 %}d-none extra-ferias{% endif %}">
+                {% if loop.index > 5 %}d-none extra-ferias{% endif %}"
+                style="cursor:pointer"
+                onclick="abrirModalFerias('{{ l.linha }}')">
+
                 {{ l.linha }}
                 <span class="badge bg-info">{{ l.total }}</span>
               </li>
@@ -263,10 +266,10 @@
       </div>
 
       <div class="modal-body p-2">
-        <ul class="list-group list-group-flush" id="listaCargosLinha"></ul>
+        <ul class="list-group list-group-flush" id="modalLista"></ul>
 
         <div class="mt-2 text-end fw-bold">
-          Total: <span id="totalFaltasLinha">0</span>
+          Total: <span id="modalTotal">0</span>
         </div>
       </div>
 
@@ -345,8 +348,9 @@ async function abrirModalLinha(linha) {
   const resp = await fetch(`/api/dashboard/linha/cargos?${params}`);
   const dados = await resp.json();
 
-  const lista = document.getElementById("listaCargosLinha");
-  const totalSpan = document.getElementById("totalFaltasLinha");
+  const lista = document.getElementById("modalLista");
+  const totalSpan = document.getElementById("modalTotal");
+
 
   lista.innerHTML = "";
   let total = 0;
@@ -377,8 +381,8 @@ async function abrirModalLinha(linha) {
 </script>
 
 <script>
-
 async function abrirModalFerias(linha) {
+
   document.getElementById("modalLinhaTitulo").innerText =
     `Férias — ${linha}`;
 
@@ -393,25 +397,34 @@ async function abrirModalFerias(linha) {
   const resp = await fetch(`/api/dashboard/linha/ferias?${params}`);
   const dados = await resp.json();
 
-  const lista = document.getElementById("listaCargosLinha");
-  const totalSpan = document.getElementById("totalFaltasLinha");
+  const lista = document.getElementById("modalLista");
+  const totalSpan = document.getElementById("modalTotal");
 
   lista.innerHTML = "";
   let total = 0;
+
+  if (!dados.length) {
+    lista.innerHTML = `
+      <li class="list-group-item text-muted">
+        Nenhuma férias registrada
+      </li>`;
+  }
 
   dados.forEach(c => {
     total += c.total;
     lista.innerHTML += `
       <li class="list-group-item d-flex justify-content-between">
-        ${c.linha}
+        ${c.nome}
         <span class="badge bg-info">${c.total}</span>
       </li>`;
   });
 
   totalSpan.innerText = total;
-  new bootstrap.Modal(document.getElementById("modalLinha")).show();
+
+  new bootstrap.Modal(
+    document.getElementById("modalLinha")
+  ).show();
 }
 </script>
-
 
 {% endblock %}
