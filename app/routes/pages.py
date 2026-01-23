@@ -62,6 +62,7 @@ def ferias_linha():
         "turno": request.args.get("turno"),
         "filial": request.args.get("filial")
     }
-    return jsonify(ferias_por_cargo_e_linha(linha, filtros))
+    return jsonify(ferias_por_linha(filtros))
+
 
 
