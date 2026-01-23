@@ -1,16 +1,19 @@
 {% extends "base.html" %}
 {% block title %}Lançamento de Absenteísmo{% endblock %}
-{% block page_title %}Venttos - Factory Metrics - Lançamento de Absenteísmo{% endblock %}
+{% block page_title %}Venttos - Factory Metrics - Lançamento{% endblock %}
 
 {% block content %}
 <form id="formLancamento"
       method="post"
       action="{{ url_for('api.api_criar_lancamento') }}">
 
-  <!-- 🔴 CAMPO OCULTO PARA ENVIAR OS CARGOS -->
+  <!-- JSONs enviados -->
   <input type="hidden" name="cargos" id="cargosJson">
+  <input type="hidden" name="ferias" id="feriasJson">
 
   <div class="row g-3">
+
+    <!-- ================= DADOS GERAIS ================= -->
 
     <div class="col-md-3">
       <label class="form-label">Data</label>
@@ -35,13 +38,12 @@
       </select>
     </div>
 
-      <div class="col-md-3">
-        <label class="form-label">Linha</label>
-        <select name="linha" id="linhaSelect" class="form-select" required>
-          <option value="">Selecione o setor primeiro</option>
-        </select>
-      </div>
-
+    <div class="col-md-3">
+      <label class="form-label">Linha</label>
+      <select name="linha" id="linhaSelect" class="form-select" required>
+        <option value="">Selecione o setor</option>
+      </select>
+    </div>
 
     <div class="col-md-3">
       <label class="form-label">Turno</label>
@@ -54,8 +56,7 @@
 
     <div class="col-md-4">
       <label class="form-label">HC Padrão</label>
-      <input type="number" name="hc_padrao" class="form-control" required
-             oninput="atualizarHCReal()">
+      <input type="number" name="hc_padrao" class="form-control" required oninput="atualizarHCReal()">
     </div>
 
     <div class="col-md-4">
@@ -63,28 +64,22 @@
       <input type="number" name="hc_real" class="form-control" readonly>
     </div>
 
-    <div class="col-md-4">
-      <label class="form-label">Férias</label>
-      <input type="number" name="ferias" class="form-control">
-    </div>
-
     <hr>
+
+    <!-- ================= ABSENTEÍSMO ================= -->
 
     <h6 class="fw-bold mt-3">Absenteísmo por Cargo</h6>
 
     <div class="row g-3">
-
       <div class="col-md-6">
         <label class="form-label">Cargo</label>
         <select id="cargo" class="form-select">
           <option value="">Selecione</option>
-
           <optgroup label="Área Técnica">
             {% for c in cargos_tecnica %}
               <option value="{{ c.id }}">{{ c.nome }}</option>
             {% endfor %}
           </optgroup>
-
           <optgroup label="Produção">
             {% for c in cargos_producao %}
               <option value="{{ c.id }}">{{ c.nome }}</option>
@@ -103,12 +98,49 @@
           Adicionar
         </button>
       </div>
-
     </div>
 
     <ul id="listaCargos" class="list-group mt-3"></ul>
 
-    <div class="col-12">
+    <hr>
+
+    <!-- ================= FÉRIAS ================= -->
+
+    <h6 class="fw-bold mt-3">Férias por Cargo</h6>
+
+    <div class="row g-3">
+      <div class="col-md-6">
+        <label class="form-label">Cargo</label>
+        <select id="cargoFerias" class="form-select">
+          <option value="">Selecione</option>
+          <optgroup label="Área Técnica">
+            {% for c in cargos_tecnica %}
+              <option value="{{ c.id }}">{{ c.nome }}</option>
+            {% endfor %}
+          </optgroup>
+          <optgroup label="Produção">
+            {% for c in cargos_producao %}
+              <option value="{{ c.id }}">{{ c.nome }}</option>
+            {% endfor %}
+          </optgroup>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Qtd</label>
+        <input type="number" id="qtdFerias" class="form-control" min="1">
+      </div>
+
+      <div class="col-md-3 d-flex align-items-end">
+        <button type="button" class="btn btn-info w-100" onclick="addFerias()">
+          Adicionar
+        </button>
+      </div>
+    </div>
+
+    <ul id="listaFerias" class="list-group mt-3"></ul>
+
+    <div class="col-12 mt-4">
       <button type="submit" class="btn btn-primary w-100">
         Salvar Lançamento
       </button>
@@ -117,139 +149,100 @@
   </div>
 </form>
 
-<!-- Mensagem de resultado -->
 <div id="msgLancamento" class="mt-3"></div>
-
 {% endblock %}
 
 {% block scripts %}
-
 <script>
 let cargos = [];
+let ferias = [];
 
+/* ========= ABSENTEÍSMO ========= */
 function addCargo() {
-    const cargoSelect = document.getElementById("cargo");
-    const qtdInput = document.getElementById("qtd");
+  const select = document.getElementById("cargo");
+  const qtdInput = document.getElementById("qtd");
 
-    const cargoId = cargoSelect.value;
-    const cargoNome = cargoSelect.options[cargoSelect.selectedIndex].text;
-    const qtd = parseInt(qtdInput.value);
+  const cargoId = select.value;
+  const cargoNome = select.options[select.selectedIndex].text;
+  const qtd = parseInt(qtdInput.value);
 
-    if (!cargoId || !qtd || qtd <= 0) {
-        alert("Selecione um cargo e informe a quantidade.");
-        return;
-    }
+  if (!cargoId || !qtd) return alert("Informe cargo e quantidade");
 
-    cargos.push({
-        cargo_id: parseInt(cargoId),
-        quantidade: qtd
-    });
+  cargos.push({ cargo_id: +cargoId, quantidade: qtd });
 
-    document.getElementById("listaCargos").innerHTML += `
-        <li class="list-group-item d-flex justify-content-between align-items-center">
-            ${cargoNome}
-            <span class="badge bg-primary">${qtd}</span>
-        </li>
-    `;
+  document.getElementById("listaCargos").innerHTML += `
+    <li class="list-group-item d-flex justify-content-between">
+      ${cargoNome}
+      <span class="badge bg-primary">${qtd}</span>
+    </li>`;
 
-    document.getElementById("cargosJson").value = JSON.stringify(cargos);
+  atualizarHCReal();
+  atualizarJsons();
 
-    atualizarHCReal();
-
-    cargoSelect.value = "";
-    qtdInput.value = "";
+  select.value = "";
+  qtdInput.value = "";
 }
-</script>
 
-<script>
-document.getElementById("formLancamento").addEventListener("submit", async function(e){
-    e.preventDefault();
+/* ========= FÉRIAS ========= */
+function addFerias() {
+  const select = document.getElementById("cargoFerias");
+  const qtdInput = document.getElementById("qtdFerias");
 
-    document.getElementById("cargosJson").value = JSON.stringify(cargos);
+  const cargoId = select.value;
+  const cargoNome = select.options[select.selectedIndex].text;
+  const qtd = parseInt(qtdInput.value);
 
-    const formData = new FormData(this);
+  if (!cargoId || !qtd) return alert("Informe cargo e quantidade");
 
-    try {
-        const resp = await fetch(this.action, {
-            method: "POST",
-            body: formData
-        });
+  ferias.push({
+    cargo_id: +cargoId,
+    quantidade: qtd,
+    tipo: "FERIAS"
+  });
 
-        const data = await resp.json();
-        const msgDiv = document.getElementById("msgLancamento");
+  document.getElementById("listaFerias").innerHTML += `
+    <li class="list-group-item d-flex justify-content-between">
+      ${cargoNome}
+      <span class="badge bg-info">${qtd}</span>
+    </li>`;
 
-        if(data.sucesso){
-            msgDiv.innerHTML = `
-                <div class="alert alert-success">
-                    Lançamento salvo com sucesso! Absenteísmo calculado:
-                    <strong>${data.absenteismo}%</strong>
-                </div>
-            `;
-            this.reset();
-            cargos = [];
-            document.getElementById("listaCargos").innerHTML = "";
-        } else {
-            msgDiv.innerHTML = `
-                <div class="alert alert-danger">
-                    Ocorreu um erro ao salvar o lançamento.
-                </div>
-            `;
-        }
-    } catch(err){
-        msgDiv.innerHTML = `
-            <div class="alert alert-danger">
-                Erro de conexão. Tente novamente.
-            </div>
-        `;
-        console.error(err);
-    }
-});
-</script>
+  atualizarJsons();
 
-<script>
+  select.value = "";
+  qtdInput.value = "";
+}
+
+/* ========= UTIL ========= */
 function atualizarHCReal(){
-  const hcPadrao = parseInt(document.querySelector("[name='hc_padrao']").value || 0);
-  const totalFaltas = cargos.reduce((s, c) => s + c.quantidade, 0);
-  document.querySelector("[name='hc_real']").value = Math.max(hcPadrao - totalFaltas, 0);
+  const hcPadrao = +document.querySelector("[name='hc_padrao']").value || 0;
+  const faltas = cargos.reduce((s,c)=>s+c.quantidade,0);
+  document.querySelector("[name='hc_real']").value = Math.max(hcPadrao - faltas, 0);
 }
-</script>
 
-<script>
+function atualizarJsons(){
+  document.getElementById("cargosJson").value = JSON.stringify(cargos);
+  document.getElementById("feriasJson").value = JSON.stringify(ferias);
+}
+
+/* ========= LINHAS ========= */
 const linhasPorSetor = {
-  IM: ["IM-01","IM-02","IM-03","IM-04","IM-05","IM-06"],
-  PA: ["IP-COM","PA-01","PA-03","PA-04","PA-07","PA-08","PA-09","PA-13","WIFI"],
-  PTH: ["ADE-01","AXI-01","AXI-02","AXI-03","JUM-01","JUM-02","RAD-01","RAD-02","RAD-03","ROU-01","ROU-02","ROU-03"],
-  SMT: ["SMT-01","SMT-02","SMT-03","SMT-04","SMT-05","SMT-06","SMT-07","SMT-08","SMT-09"],
-  VTT: ["PA-12","PA-16","PA-17","PA-18","PA-19","PA-20"]
+  IM:["IM-01","IM-02","IM-03","IM-04","IM-05","IM-06"],
+  PA:["IP-COM","PA-01","PA-03","PA-04","PA-07","PA-08","PA-09","PA-13","WIFI"],
+  PTH:["ADE-01","AXI-01","AXI-02","AXI-03","JUM-01","JUM-02","RAD-01","RAD-02","RAD-03","ROU-01","ROU-02","ROU-03"],
+  SMT:["SMT-01","SMT-02","SMT-03","SMT-04","SMT-05","SMT-06","SMT-07","SMT-08","SMT-09"]
 };
 
-const setorSelect = document.querySelector("select[name='setor']");
+const setorSelect = document.querySelector("[name='setor']");
 const linhaSelect = document.getElementById("linhaSelect");
 
-function atualizarLinhas() {
-  const setor = setorSelect.value;
-  linhaSelect.innerHTML = "";
-
-  if (!linhasPorSetor[setor]) {
-    linhaSelect.innerHTML = `<option value="">Selecione o setor primeiro</option>`;
-    return;
-  }
-
+function atualizarLinhas(){
   linhaSelect.innerHTML = `<option value="">Selecione</option>`;
-
-  linhasPorSetor[setor].forEach(linha => {
-    const opt = document.createElement("option");
-    opt.value = linha;
-    opt.textContent = linha;
-    linhaSelect.appendChild(opt);
+  (linhasPorSetor[setorSelect.value] || []).forEach(l=>{
+    linhaSelect.innerHTML += `<option value="${l}">${l}</option>`;
   });
 }
 
-// 🔹 quando o usuário troca o setor
 setorSelect.addEventListener("change", atualizarLinhas);
-
-// 🔹 quando a página carrega (RESOLVE O BUG)
 document.addEventListener("DOMContentLoaded", atualizarLinhas);
 </script>
-
 {% endblock %}
