@@ -22,8 +22,8 @@ def resumo_dashboard(filtros):
         params.append(filtros["filial"])
 
     if filtros.get("setor"):
-    where.append("setor = %s")
-    params.append(filtros["setor"])
+        where.append("setor = %s")
+        params.append(filtros["setor"])
 
     if filtros.get("linha"):
         where.append("linha = %s")
