@@ -24,23 +24,6 @@
 
 {% block content %}
 <div class="container-fluid">
-
-<!-- 🔹 Navegação rápida (somente mobile, isolada do touch) -->
-<div class="d-md-none mb-3">
-  <div class="nav-mobile-scroll">
-    <button
-  type="button"
-  class="btn btn-sm btn-outline-danger"
-  onclick="scrollToId('ranking-setor')">
-  Setor
-</button>
-
-    <a href="#ranking-filial" class="btn btn-sm btn-outline-primary">Filial</a>
-    <a href="#ranking-cargos" class="btn btn-sm btn-outline-warning">Cargos</a>
-    <a href="#ferias" class="btn btn-sm btn-outline-info">Férias</a>
-    <a href="#absenteismo" class="btn btn-sm btn-outline-danger">Absenteísmo</a>
-  </div>
-</div>
   
   <form method="get" class="row g-3 mb-4">
     <div class="col-md-3">
@@ -476,18 +459,6 @@ async function abrirModalFerias(linha) {
   new bootstrap.Modal(
     document.getElementById("modalLinha")
   ).show();
-}
-</script>
-
-<script>
-function scrollToId(id) {
-  const el = document.getElementById(id);
-  if (!el) return;
-
-  el.scrollIntoView({
-    behavior: 'smooth',
-    block: 'start'
-  });
 }
 </script>
 
