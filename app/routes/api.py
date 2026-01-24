@@ -108,3 +108,18 @@ def api_ferias_linha_cargos():
 def api_atestado():
     return jsonify(registrar_atestado(request.form))
 
+@bp.route("/linhas", methods=["GET"])
+def api_linhas_por_setor():
+    setor = request.args.get("setor")
+    linhas = {
+        "IM": ["IM-01", "IM-02"],
+        "PA": ["PA-01", "PA-02"],
+        "SMT": ["SMT-01", "SMT-02"],
+        "PTH": ["PTH-01"],
+        "VTT": ["VTT-01"]
+    }
+    if not setor or setor == "Todos":
+        return jsonify([])
+    return jsonify(linhas.get(setor, []))
+
+
