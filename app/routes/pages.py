@@ -34,6 +34,7 @@ def dashboard():
     return render_template(
         "dashboard.html",
         filtros=filtros,
+        active_menu="dashboard",
         **dados
     )
 
@@ -66,10 +67,10 @@ def ferias_linha():
 
 @bp.route("/relatorios")
 def relatorios():
-    return render_template("relatorios.html")
+    return render_template("relatorios.html", active_menu="dashboard")
 
 @bp.route("/powerbi")
 def powerbi():
-    return render_template("powerbi.html")
+    return render_template("powerbi.html", active_menu="dashboard")
 
 
