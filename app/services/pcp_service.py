@@ -1,7 +1,6 @@
 from psycopg.rows import dict_row
 from app.extensions import get_db
 from app.repositories.lancamentos_repository import ferias_por_linha
-from app.services.pcp_service import ranking_linhas_faltas
 
 def ranking_linhas_ferias(filtros):
     return ferias_por_linha(filtros)
