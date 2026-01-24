@@ -5,7 +5,7 @@
 <div class="d-flex align-items-center w-100">
   <span class="me-auto">Venttos - Factory Metrics &rarr; Power BI</span>
 
-  <div class="btn-group" role="group" aria-label="Dashboard Actions">
+  <div class="btn-group" role="group">
     <a href="{{ url_for('pages.dashboard') }}" class="btn btn-outline-secondary me-2">
       <i class="bi bi-arrow-left"></i> Voltar
     </a>
@@ -22,7 +22,7 @@
 {% block content %}
 <div class="container-fluid">
 
-<form method="get" class="mb-4">
+<form method="get" id="filtrosForm" class="mb-4">
 
   <!-- HEADER -->
   <div class="d-flex align-items-center gap-4 flex-wrap">
@@ -34,7 +34,7 @@
       <!-- FILIAL -->
       <div class="col-md">
         <label>Filial</label>
-        <select name="filial" class="form-select">
+        <select name="filial" class="form-select auto-submit">
           <option value="">Todas</option>
           <option value="VTE" {% if filtros.filial=='VTE' %}selected{% endif %}>VTE</option>
           <option value="VTT" {% if filtros.filial=='VTT' %}selected{% endif %}>VTT</option>
@@ -44,7 +44,7 @@
       <!-- SETOR -->
       <div class="col-md">
         <label>Setor</label>
-        <select name="setor" id="setorSelect" class="form-select">
+        <select name="setor" id="setorSelect" class="form-select auto-submit">
           <option value="">Todos</option>
           <option value="IM" {% if filtros.setor=='IM' %}selected{% endif %}>IM</option>
           <option value="PA" {% if filtros.setor=='PA' %}selected{% endif %}>PA</option>
@@ -56,7 +56,7 @@
       <!-- TURNO -->
       <div class="col-md">
         <label>Turno</label>
-        <select name="turno" class="form-select">
+        <select name="turno" class="form-select auto-submit">
           <option value="">Todos</option>
           <option value="1T" {% if filtros.turno=='1T' %}selected{% endif %}>1º</option>
           <option value="2T" {% if filtros.turno=='2T' %}selected{% endif %}>2º</option>
@@ -67,30 +67,26 @@
       <!-- LINHA -->
       <div class="col-md">
         <label>Linha</label>
-        <select name="linha" id="linhaSelect" class="form-select">
+        <select name="linha" id="linhaSelect" class="form-select auto-submit">
           <option value="">Todas</option>
         </select>
       </div>
 
-      <!-- DATAS (mantidas no final) -->
+      <!-- DATAS (NO FINAL, COMO PEDIDO) -->
       <div class="col-md">
         <label>Data Inicial</label>
-        <input type="date" name="data_inicial"
-               class="form-control"
+        <input type="date"
+               name="data_inicial"
+               class="form-control auto-submit"
                value="{{ filtros.data_inicial }}">
       </div>
 
       <div class="col-md">
         <label>Data Final</label>
-        <input type="date" name="data_final"
-               class="form-control"
+        <input type="date"
+               name="data_final"
+               class="form-control auto-submit"
                value="{{ filtros.data_final }}">
-      </div>
-
-      <div class="col-md d-flex align-items-end">
-        <button class="btn btn-primary w-100">
-          <i class="bi bi-funnel"></i> Filtrar
-        </button>
       </div>
 
     </div>
@@ -102,8 +98,10 @@
   {% for k,v in kpis.items() %}
   <div class="col-md-3">
     <div class="card shadow-sm p-3">
-      <small>{{ k|replace('_',' ')|title }}</small>
-      <h4>{{ v }}{% if k=='absenteismo' %}%{% endif %}</h4>
+      <small class="text-muted">{{ k|replace('_',' ')|title }}</small>
+      <h4 class="fw-bold">
+        {{ v }}{% if k=='absenteismo' %}%{% endif %}
+      </h4>
     </div>
   </div>
   {% endfor %}
@@ -115,8 +113,8 @@
 {% block scripts %}
 <script>
 const linhas = {
-  IM:["IM-01","IM-02"],
-  PA:["PA-01","PA-02"],
+  IM: ["IM-01","IM-02"],
+  PA: ["PA-01","PA-02"],
   SMT:["SMT-01","SMT-02"],
   PTH:["PTH-01"]
 };
@@ -126,14 +124,21 @@ function atualizarLinhas(){
   const linhaSelect = document.getElementById("linhaSelect");
   const atual = "{{ filtros.linha or '' }}";
 
-  linhaSelect.innerHTML = `<option value="">Todas</option>`;
-  (linhas[setor] || []).forEach(l=>{
-    linhaSelect.innerHTML += `
-      <option value="${l}" ${l===atual?'selected':''}>${l}</option>`;
+  linhaSelect.innerHTML = '<option value="">Todas</option>';
+  (linhas[setor] || []).forEach(l => {
+    linhaSelect.innerHTML +=
+      `<option value="${l}" ${l===atual?'selected':''}>${l}</option>`;
   });
 }
 
-document.getElementById("setorSelect").addEventListener("change", atualizarLinhas);
-document.addEventListener("DOMContentLoaded", atualizarLinhas);
+document.addEventListener("DOMContentLoaded", () => {
+  atualizarLinhas();
+
+  document.querySelectorAll(".auto-submit").forEach(el => {
+    el.addEventListener("change", () => {
+      document.getElementById("filtrosForm").submit();
+    });
+  });
+});
 </script>
 {% endblock %}
