@@ -126,8 +126,10 @@ def api_linhas_por_setor():
 
 @bp.route("/relatorios", methods=["GET"])
 def api_relatorios():
-    setor = request.args.get("setor")
+    setor = request.args.get("setor") or None
     tipo = request.args.get("tipo", "MENSAL")
-    return jsonify(gerar_relatorio(setor, tipo))
+
+    dados = gerar_relatorio(setor, tipo)
+    return jsonify(dados)
 
 
