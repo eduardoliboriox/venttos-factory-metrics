@@ -200,3 +200,72 @@ def ranking_linhas_faltas(filtros):
         with conn.cursor(row_factory=dict_row) as cur:
             cur.execute(query, params)
             return cur.fetchall()
+
+def ranking_linhas_faltas_powerbi(filtros):
+    """
+    Retorna todas as linhas ativas no período, incluindo linhas com 0 falta.
+    Aplica regras visuais de altura mínima para gráficos.
+    """
+
+    where = []
+    params = []
+
+    if filtros.get("data_inicial") and filtros.get("data_final"):
+        where.append("l.data BETWEEN %s AND %s")
+        params += [filtros["data_inicial"], filtros["data_final"]]
+
+    if filtros.get("turno"):
+        where.append("l.turno = %s")
+        params.append(filtros["turno"])
+
+    if filtros.get("filial"):
+        where.append("l.filial = %s")
+        params.append(filtros["filial"])
+
+    where_sql = " AND ".join(where)
+    if where_sql:
+        where_sql = "AND " + where_sql
+
+    query = f"""
+        SELECT
+            l.linha,
+            COALESCE(SUM(lc.quantidade), 0) AS total_faltas
+        FROM lancamentos l
+        LEFT JOIN lancamentos_cargos lc
+            ON lc.lancamento_id = l.id
+           AND lc.tipo = 'FALTA'
+        WHERE 1=1
+        {where_sql}
+        GROUP BY l.linha
+        ORDER BY total_faltas DESC
+    """
+
+    with get_db() as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute(query, params)
+            rows = cur.fetchall()
+
+    if not rows:
+        return []
+
+    max_faltas = max(r["total_faltas"] for r in rows)
+
+    resultado = []
+    for r in rows:
+        total = r["total_faltas"]
+
+        # Regra visual
+        if max_faltas == 0:
+            altura = 1
+        else:
+            altura = max_faltas if total == 0 else total
+
+        resultado.append({
+            "linha": r["linha"],
+            "faltas": total,
+            "altura": altura,
+            "status": "OK" if total == 0 else "CRITICO"
+        })
+
+    return resultado
+
