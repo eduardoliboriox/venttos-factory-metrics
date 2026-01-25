@@ -1,58 +1,73 @@
-document.getElementById("formRelatorio").addEventListener("submit", async e => {
+document.getElementById("formRelatorio").addEventListener("submit", async function (e) {
   e.preventDefault();
 
-  const params = new URLSearchParams(new FormData(e.target));
-  const resp = await fetch(`/api/relatorios?${params}`);
-  const data = await resp.json();
+  const formData = new FormData(this);
+  const params = new URLSearchParams(formData);
 
-  let html = `
-    <div class="card shadow-sm p-4 mb-4">
-      <h5 class="fw-bold">Relatório Gerencial</h5>
-      <small class="text-muted">${data.periodo}</small>
-    </div>
-
-    <div class="row g-3 mb-4 text-center">
-      <div class="col-md-4">
-        <div class="card p-3 shadow-sm">
-          <small>Total de Faltas</small>
-          <h3 class="text-danger">${data.kpis.total_faltas}</h3>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card p-3 shadow-sm">
-          <small>Linhas Afetadas</small>
-          <h3>${data.kpis.linhas_afetadas}</h3>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card p-3 shadow-sm">
-          <small>Linhas Monitoradas</small>
-          <h3>${data.kpis.linhas_totais}</h3>
-        </div>
-      </div>
-    </div>
-
-    <div class="card shadow-sm p-3 mb-4">
-      <h6 class="fw-bold text-danger">
-        Top Linhas com Maior Impacto
-      </h6>
-      <ul class="list-group list-group-flush">
-        ${data.linhas.map(l => `
-          <li class="list-group-item d-flex justify-content-between">
-            ${l.linha}
-            <span class="badge bg-danger">${l.total_faltas}</span>
-          </li>
-        `).join("")}
-      </ul>
-    </div>
-
-    <div class="alert alert-secondary">
-      <strong>Insight Automático:</strong>
-      ${data.insight}
+  const resultado = document.getElementById("resultadoRelatorio");
+  resultado.innerHTML = `
+    <div class="alert alert-info">
+      <i class="bi bi-hourglass-split"></i> Gerando relatório...
     </div>
   `;
 
-  document.getElementById("resultadoRelatorio").innerHTML = html;
+  try {
+    const response = await fetch(`/api/relatorios?${params.toString()}`);
+    const data = await response.json();
+
+    if (!response.ok) {
+      throw new Error(data.error || "Erro ao gerar relatório");
+    }
+
+    resultado.innerHTML = `
+      <div class="card shadow-sm">
+        <div class="card-header bg-light">
+          <strong>Período:</strong> ${data.periodo}
+        </div>
+
+        <div class="card-body">
+          <h5 class="mb-3">
+            <i class="bi bi-bar-chart"></i>
+            Ranking de Linhas por Faltas
+          </h5>
+
+          <ul class="list-group mb-4">
+            ${data.linhas.map(l => `
+              <li class="list-group-item">
+                <div class="d-flex justify-content-between align-items-center">
+                  <strong>${l.linha}</strong>
+                  <span class="badge bg-danger fs-6">${l.total_faltas}</span>
+                </div>
+
+                ${l.cargo_critico ? `
+                  <div class="mt-1">
+                    <small class="text-muted">
+                      Cargo crítico:
+                      <strong>${l.cargo_critico.cargo}</strong>
+                      — ${l.cargo_critico.percentual_linha}% da linha
+                    </small>
+                  </div>
+                ` : ""}
+              </li>
+            `).join("")}
+          </ul>
+
+          ${data.cargo_critico ? `
+            <div class="alert alert-warning">
+              <strong>Cargo mais impactante no período:</strong>
+              ${data.cargo_critico.nome}
+              (${data.cargo_critico.total} faltas)
+            </div>
+          ` : ""}
+        </div>
+      </div>
+    `;
+  } catch (error) {
+    resultado.innerHTML = `
+      <div class="alert alert-danger">
+        <i class="bi bi-exclamation-triangle"></i>
+        ${error.message}
+      </div>
+    `;
+  }
 });
