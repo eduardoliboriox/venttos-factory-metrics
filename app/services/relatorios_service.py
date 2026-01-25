@@ -8,12 +8,6 @@ def _formatar_data_br(d: date) -> str:
     """Formata data para padrão brasileiro DD-MM-YYYY"""
     return d.strftime("%d-%m-%Y")
 
-
-from app.extensions import get_db
-from psycopg.rows import dict_row
-from datetime import date, timedelta
-
-
 def gerar_relatorio(setor, tipo):
     hoje = date.today()
 
