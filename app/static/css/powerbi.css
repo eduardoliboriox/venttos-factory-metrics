@@ -201,6 +201,11 @@
   margin-top: 2px;
 }
 
+/* Exceção semântica: permitir danger nos KPIs */
+.powerbi-wrapper .card h4.text-danger {
+  color: #dc3545 !important;
+}
+
 /* Força textos dentro do modal Power BI para escuro */
 #modalLinhaPowerBI,
 #modalLinhaPowerBI h6,
