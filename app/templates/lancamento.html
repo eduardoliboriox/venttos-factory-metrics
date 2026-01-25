@@ -1,6 +1,21 @@
 {% extends "base.html" %}
 {% block title %}Lançamento de Absenteísmo{% endblock %}
-{% block page_title %}Venttos - Factory Metrics - Lançamento{% endblock %}
+{% block page_title %}
+<div class="d-flex align-items-center w-100">
+  <span class="me-auto">
+    Venttos - Factory Metrics - Lançamento
+  </span>
+
+  <div>
+    <button class="btn btn-outline-dark"
+            type="button"
+            onclick="toggleFullscreen()">
+      <i class="bi bi-arrows-fullscreen"></i>
+    </button>
+  </div>
+</div>
+{% endblock %}
+
 
 {% block content %}
 <form id="formLancamento"
