@@ -149,7 +149,9 @@
 
   <div class="d-flex align-items-end gap-3" style="height:220px">
     {% for l in ranking_faltas_powerbi %}
-      <div class="text-center" style="width:60px">
+      <!-- Cada coluna clicável -->
+      <div class="text-center" style="width:60px; cursor:pointer;" 
+           onclick="abrirModalLinhaPowerBI('{{ l.linha }}')">
   
         <!-- valor -->
         <div class="fw-bold small mb-1">
@@ -191,7 +193,7 @@
           Total: <span id="modalTotalPowerBI">0</span>
         </div>
 
-        <!-- Ranking de linhas -->
+        <!-- Ranking de linhas (opcional dentro do modal) -->
         <h6 class="fw-bold text-danger">Ranking de Linhas</h6>
         <ul class="list-group list-group-flush" id="rankingLinhasPowerBIList">
           {% for linha in ranking_linhas_faltas_powerbi %}
@@ -208,6 +210,7 @@
     </div>
   </div>
 </div>
+
 
   
 
@@ -252,9 +255,11 @@ document.querySelectorAll(".auto-submit").forEach(el => {
 <script>
 async function abrirModalLinhaPowerBI(linha) {
 
+  // Atualiza o título do modal
   document.getElementById("modalLinhaPowerBITitulo").innerText =
     `Faltas — ${linha}`;
 
+  // Monta os parâmetros do fetch
   const params = new URLSearchParams({
     linha: linha,
     data_inicial: "{{ filtros.data_inicial }}",
@@ -263,6 +268,7 @@ async function abrirModalLinhaPowerBI(linha) {
     filial: "{{ filtros.filial or '' }}"
   });
 
+  // Chama a API para pegar os dados da linha
   const resp = await fetch(`/api/dashboard/linha/cargos?${params}`);
   const dados = await resp.json();
 
@@ -277,24 +283,26 @@ async function abrirModalLinhaPowerBI(linha) {
       <li class="list-group-item text-muted">
         Nenhuma falta registrada
       </li>`;
+  } else {
+    dados.forEach(c => {
+      total += c.total;
+      lista.innerHTML += `
+        <li class="list-group-item d-flex justify-content-between">
+          ${c.nome}
+          <span class="badge bg-danger">${c.total}</span>
+        </li>`;
+    });
   }
-
-  dados.forEach(c => {
-    total += c.total;
-    lista.innerHTML += `
-      <li class="list-group-item d-flex justify-content-between">
-        ${c.nome}
-        <span class="badge bg-danger">${c.total}</span>
-      </li>`;
-  });
 
   totalSpan.innerText = total;
 
+  // Mostra o modal
   new bootstrap.Modal(
     document.getElementById("modalLinhaPowerBI")
   ).show();
 }
 </script>
+
 
 
 {% endblock %}
