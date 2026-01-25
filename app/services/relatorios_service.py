@@ -10,13 +10,13 @@ def gerar_relatorio(setor, tipo):
         data_inicial = hoje - timedelta(days=7)
     elif tipo == "MENSAL":
         data_inicial = hoje.replace(day=1)
-    else:  # ANUAL
+    else:
         data_inicial = hoje.replace(month=1, day=1)
 
     query = """
         SELECT
             l.linha,
-            SUM(lc.quantidade) AS total_faltas
+            COALESCE(SUM(lc.quantidade), 0) AS total_faltas
         FROM lancamentos l
         JOIN lancamentos_cargos lc ON lc.lancamento_id = l.id
         WHERE lc.tipo = 'FALTA'
@@ -30,7 +30,7 @@ def gerar_relatorio(setor, tipo):
     with get_db() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
             cur.execute(query, (data_inicial, hoje, setor, setor))
-            linhas = cur.fetchall()
+            linhas = cur.fetchall() or []
 
     cargo_query = """
         SELECT
@@ -54,5 +54,5 @@ def gerar_relatorio(setor, tipo):
     return {
         "periodo": f"{data_inicial} até {hoje}",
         "linhas": linhas,
-        "cargo_critico": cargo
+        "cargo_critico": cargo  
     }
