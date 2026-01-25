@@ -8,6 +8,7 @@ from app.services.lancamentos_service import (
 )
 from app.services.pcp_service import ranking_linhas_ferias
 from app.services.atestados_service import registrar_atestado
+from app.services.relatorios_service import gerar_relatorio
 
 bp = Blueprint("api", __name__)
 
@@ -122,4 +123,8 @@ def api_linhas_por_setor():
         return jsonify([])
     return jsonify(linhas.get(setor, []))
 
-
+@bp.route("/relatorios", methods=["GET"])
+def api_relatorios():
+    setor = request.args.get("setor")
+    tipo = request.args.get("tipo", "MENSAL")
+    return jsonify(gerar_relatorio(setor, tipo))
