@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request
-from app.services.pcp_service import resumo_dashboard
+from app.services.pcp_service import resumo_dashboard, ranking_linhas_faltas_powerbi
 from datetime import date
 from app.services import cargos_service
 
@@ -83,15 +83,20 @@ def powerbi():
     hoje = date.today().isoformat()
     filtros["data_inicial"] = filtros["data_inicial"] or hoje
     filtros["data_final"] = filtros["data_final"] or hoje
-
+    
     dados = resumo_dashboard(filtros)
-
+    
+    ranking_faltas_powerbi = ranking_linhas_faltas_powerbi(filtros)
+    
     return render_template(
         "powerbi.html",
         filtros=filtros,
         active_menu="dashboard",
+        ranking_faltas_powerbi=ranking_faltas_powerbi,
         **dados
     )
+
+
 
 
 
