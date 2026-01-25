@@ -4,6 +4,11 @@ from psycopg.rows import dict_row
 from datetime import date, timedelta
 
 
+def _formatar_data_br(d: date) -> str:
+    """Formata data para padrão brasileiro DD-MM-YYYY"""
+    return d.strftime("%d-%m-%Y")
+
+
 def gerar_relatorio(setor, tipo):
     hoje = date.today()
 
@@ -68,7 +73,7 @@ def gerar_relatorio(setor, tipo):
             cargo = cur.fetchone()
 
     return {
-        "periodo": f"{data_inicial} até {hoje}",
+        "periodo": f"{_formatar_data_br(data_inicial)} até {_formatar_data_br(hoje)}",
         "linhas": linhas,
         "cargo_critico": cargo
     }
