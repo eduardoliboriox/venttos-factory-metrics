@@ -17,16 +17,22 @@ def gerar_relatorio(setor, tipo):
     query = """
         SELECT
             l.linha,
-            COALESCE(SUM(lc.quantidade), 0) AS total_faltas
+            COALESCE(SUM(lc.quantidade), 0) AS total_faltas,
+            ROUND(
+                COALESCE(SUM(lc.quantidade), 0) * 100.0
+                / NULLIF(SUM(SUM(lc.quantidade)) OVER (), 0),
+                1
+            ) AS percentual
         FROM lancamentos l
         JOIN lancamentos_cargos lc ON lc.lancamento_id = l.id
         WHERE lc.tipo = 'FALTA'
           AND l.data BETWEEN %s AND %s
-          AND (%s::text IS NULL OR l.setor = %s::text)
+          AND (%s IS NULL OR l.setor = %s)
         GROUP BY l.linha
         ORDER BY total_faltas DESC
         LIMIT 10
     """
+
 
     with get_db() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
