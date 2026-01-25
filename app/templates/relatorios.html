@@ -32,8 +32,41 @@
 
 {% block content %}
 <div class="container-fluid">
-  <div class="alert alert-info mt-3">
-    Página de Relatórios - Conteúdo mínimo para teste.
-  </div>
+
+  <form class="row g-3 mb-4" id="formRelatorio">
+    <div class="col-md-4">
+      <label class="form-label">Setor</label>
+      <select class="form-select" name="setor">
+        <option value="">Todos</option>
+        <option>IM</option>
+        <option>PA</option>
+        <option>SMT</option>
+        <option>PTH</option>
+      </select>
+    </div>
+
+    <div class="col-md-4">
+      <label class="form-label">Tipo de Relatório</label>
+      <select class="form-select" name="tipo">
+        <option value="SEMANAL">Semanal</option>
+        <option value="MENSAL" selected>Mensal</option>
+        <option value="ANUAL">Anual</option>
+      </select>
+    </div>
+
+    <div class="col-md-4 d-flex align-items-end">
+      <button class="btn btn-primary w-100" type="submit">
+        <i class="bi bi-file-earmark-bar-graph"></i> Gerar Relatório
+      </button>
+    </div>
+  </form>
+
+  <div id="resultadoRelatorio"></div>
+
 </div>
 {% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/relatorios.js') }}"></script>
+{% endblock %}
+
