@@ -2,10 +2,10 @@
 {% block title %}Power BI{% endblock %}
 
 {% block page_title %}
-<div class="d-flex align-items-center w-100 gap-2">
+<div class="d-flex align-items-center w-100 ">
   <span class="me-auto">Venttos - Factory Metrics → Power BI</span>
 
-  <div class="btn-group" role="group">
+  <div class="btn-group gap-2" role="group">
     <a href="{{ url_for('pages.dashboard') }}" class="btn btn-outline-secondary me-2">
       <i class="bi bi-arrow-left"></i> Voltar
     </a>
@@ -15,12 +15,12 @@
     <a href="{{ url_for('pages.powerbi') }}" class="btn btn-outline-success">
       <i class="bi bi-bar-chart"></i> Power BI
     </a>
-
-  <button class="btn btn-outline-dark"
-          type="button"
-          onclick="toggleFullscreen()">
-    <i class="bi bi-arrows-fullscreen"></i>
-  </button>
+  
+    <button class="btn btn-outline-dark"
+            type="button"
+            onclick="toggleFullscreen()">
+      <i class="bi bi-arrows-fullscreen"></i>
+    </button>
 
   </div>
 </div>
