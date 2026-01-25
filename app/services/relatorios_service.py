@@ -9,6 +9,11 @@ def _formatar_data_br(d: date) -> str:
     return d.strftime("%d-%m-%Y")
 
 
+from app.extensions import get_db
+from psycopg.rows import dict_row
+from datetime import date, timedelta
+
+
 def gerar_relatorio(setor, tipo):
     hoje = date.today()
 
@@ -19,37 +24,31 @@ def gerar_relatorio(setor, tipo):
     else:
         data_inicial = hoje.replace(month=1, day=1)
 
-    where = [
-        "lc.tipo = 'FALTA'",
-        "l.data BETWEEN %s AND %s"
-    ]
-    params = [data_inicial, hoje]
-
-    if setor:
-        where.append("l.setor = %s")
-        params.append(setor)
-
-    where_sql = " AND ".join(where)
-
-    query = f"""
+    # ===============================
+    # Ranking de linhas por faltas
+    # ===============================
+    query = """
         SELECT
             l.linha,
-            SUM(lc.quantidade) AS total_faltas
+            COALESCE(SUM(lc.quantidade), 0) AS total_faltas
         FROM lancamentos l
         JOIN lancamentos_cargos lc ON lc.lancamento_id = l.id
-        WHERE {where_sql}
+        WHERE lc.tipo = 'FALTA'
+          AND l.data BETWEEN %s AND %s
+          AND (%s IS NULL OR l.setor = %s::text)
         GROUP BY l.linha
         ORDER BY total_faltas DESC
+        LIMIT 10
     """
 
     with get_db() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
-            cur.execute(query, params)
+            cur.execute(query, (data_inicial, hoje, setor, setor))
             linhas = cur.fetchall() or []
 
-    total_faltas = sum(l["total_faltas"] for l in linhas)
-    linhas_criticas = [l for l in linhas if l["total_faltas"] > 0]
-
+    # ==========================================
+    # Cargo crítico GLOBAL (visão executiva)
+    # ==========================================
     cargo_query = """
         SELECT
             c.nome,
@@ -67,20 +66,62 @@ def gerar_relatorio(setor, tipo):
     with get_db() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
             cur.execute(cargo_query, (data_inicial, hoje))
-            cargo = cur.fetchone()
+            cargo_critico_global = cur.fetchone()
+
+    # =====================================================
+    # Cargo crítico POR LINHA + percentual dentro da linha
+    # =====================================================
+    linha_cargo_query = """
+        WITH total_linha AS (
+            SELECT
+                l.linha,
+                SUM(lc.quantidade) AS total_linha
+            FROM lancamentos l
+            JOIN lancamentos_cargos lc ON lc.lancamento_id = l.id
+            WHERE lc.tipo = 'FALTA'
+              AND l.data BETWEEN %s AND %s
+              AND l.linha = %s
+            GROUP BY l.linha
+        )
+        SELECT
+            c.nome AS cargo,
+            SUM(lc.quantidade) AS total,
+            ROUND(
+                SUM(lc.quantidade) * 100.0 / tl.total_linha,
+                2
+            ) AS percentual_linha
+        FROM lancamentos_cargos lc
+        JOIN cargos c ON c.id = lc.cargo_id
+        JOIN lancamentos l ON l.id = lc.lancamento_id
+        JOIN total_linha tl ON tl.linha = l.linha
+        WHERE lc.tipo = 'FALTA'
+          AND l.data BETWEEN %s AND %s
+          AND l.linha = %s
+        GROUP BY c.nome, tl.total_linha
+        ORDER BY total DESC
+        LIMIT 1
+    """
+
+    # Enriquecendo cada linha com análise de cargo
+    for linha in linhas:
+        with get_db() as conn:
+            with conn.cursor(row_factory=dict_row) as cur:
+                cur.execute(
+                    linha_cargo_query,
+                    (
+                        data_inicial,
+                        hoje,
+                        linha["linha"],
+                        data_inicial,
+                        hoje,
+                        linha["linha"],
+                    ),
+                )
+                linha["cargo_critico"] = cur.fetchone()
 
     return {
-        "periodo": f"{_formatar_data_br(data_inicial)} até {_formatar_data_br(hoje)}",
-        "kpis": {
-            "total_faltas": total_faltas,
-            "linhas_afetadas": len(linhas_criticas),
-            "linhas_totais": len(linhas)
-        },
-        "linhas": linhas[:10],
-        "cargo_critico": cargo,
-        "insight": (
-            "Nível de absenteísmo elevado requer atenção gerencial."
-            if total_faltas > 0 else
-            "Não foram identificadas faltas relevantes no período."
-        )
+        "periodo": f"{data_inicial} até {hoje}",
+        "linhas": linhas,
+        "cargo_critico": cargo_critico_global,
     }
+
