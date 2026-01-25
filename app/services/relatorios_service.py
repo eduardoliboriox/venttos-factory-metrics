@@ -22,7 +22,7 @@ def gerar_relatorio(setor, tipo):
         JOIN lancamentos_cargos lc ON lc.lancamento_id = l.id
         WHERE lc.tipo = 'FALTA'
           AND l.data BETWEEN %s AND %s
-          AND (%s IS NULL OR l.setor = %s::text)
+          AND (%s::text IS NULL OR l.setor = %s::text)
         GROUP BY l.linha
         ORDER BY total_faltas DESC
         LIMIT 10
