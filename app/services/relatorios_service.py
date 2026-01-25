@@ -14,7 +14,19 @@ def gerar_relatorio(setor, tipo):
     else:
         data_inicial = hoje.replace(month=1, day=1)
 
-    query = """
+    where = [
+        "lc.tipo = 'FALTA'",
+        "l.data BETWEEN %s AND %s"
+    ]
+    params = [data_inicial, hoje]
+
+    if setor:
+        where.append("l.setor = %s")
+        params.append(setor)
+
+    where_sql = " AND ".join(where)
+
+    query = f"""
         SELECT
             l.linha,
             COALESCE(SUM(lc.quantidade), 0) AS total_faltas,
@@ -25,21 +37,15 @@ def gerar_relatorio(setor, tipo):
             ) AS percentual
         FROM lancamentos l
         JOIN lancamentos_cargos lc ON lc.lancamento_id = l.id
-        WHERE lc.tipo = 'FALTA'
-          AND l.data BETWEEN %s AND %s
-          AND (%s IS NULL OR l.setor = %s)
+        WHERE {where_sql}
         GROUP BY l.linha
         ORDER BY total_faltas DESC
         LIMIT 10
     """
 
-
     with get_db() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
-            cur.execute(
-                query,
-                (data_inicial, hoje, setor, setor)
-            )
+            cur.execute(query, params)
             linhas = cur.fetchall() or []
 
     cargo_query = """
