@@ -121,7 +121,9 @@
   <div class="col-md-2">
     <div class="card shadow-sm p-3">
       <small>Ausências</small>
-      <h4 class="text-danger">{{ kpis.ausencias }}</h4>
+      <h4 class="{% if kpis.ausencias == 0 %}text-success{% else %}text-danger{% endif %}">
+          {{ kpis.ausencias }}
+      </h4>
     </div>
   </div>
 
