@@ -34,7 +34,7 @@
 <div class="container-fluid">
 
   <!-- Filtros -->
-  <form class="row g-3 mb-4" id="formRelatorio">
+  <form id="formRelatorio" class="row g-3 mb-4">
     <div class="col-md-4">
       <label class="form-label">Setor</label>
       <select class="form-select" name="setor">
@@ -47,7 +47,7 @@
     </div>
 
     <div class="col-md-4">
-      <label class="form-label">Tipo</label>
+      <label class="form-label">Período</label>
       <select class="form-select" name="tipo">
         <option value="SEMANAL">Semanal</option>
         <option value="MENSAL" selected>Mensal</option>
@@ -56,8 +56,8 @@
     </div>
 
     <div class="col-md-4 d-flex align-items-end">
-      <button class="btn btn-primary w-100" type="submit">
-        <i class="bi bi-file-earmark-bar-graph"></i>
+      <button class="btn btn-primary w-100">
+        <i class="bi bi-file-earmark-text"></i>
         Gerar Relatório
       </button>
     </div>

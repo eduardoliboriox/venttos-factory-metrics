@@ -34,24 +34,21 @@ def gerar_relatorio(setor, tipo):
     query = f"""
         SELECT
             l.linha,
-            COALESCE(SUM(lc.quantidade), 0) AS total_faltas,
-            ROUND(
-                COALESCE(SUM(lc.quantidade), 0) * 100.0
-                / NULLIF(SUM(SUM(lc.quantidade)) OVER (), 0),
-                1
-            ) AS percentual
+            SUM(lc.quantidade) AS total_faltas
         FROM lancamentos l
         JOIN lancamentos_cargos lc ON lc.lancamento_id = l.id
         WHERE {where_sql}
         GROUP BY l.linha
         ORDER BY total_faltas DESC
-        LIMIT 10
     """
 
     with get_db() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
             cur.execute(query, params)
             linhas = cur.fetchall() or []
+
+    total_faltas = sum(l["total_faltas"] for l in linhas)
+    linhas_criticas = [l for l in linhas if l["total_faltas"] > 0]
 
     cargo_query = """
         SELECT
@@ -74,6 +71,16 @@ def gerar_relatorio(setor, tipo):
 
     return {
         "periodo": f"{_formatar_data_br(data_inicial)} até {_formatar_data_br(hoje)}",
-        "linhas": linhas,
-        "cargo_critico": cargo
+        "kpis": {
+            "total_faltas": total_faltas,
+            "linhas_afetadas": len(linhas_criticas),
+            "linhas_totais": len(linhas)
+        },
+        "linhas": linhas[:10],
+        "cargo_critico": cargo,
+        "insight": (
+            "Nível de absenteísmo elevado requer atenção gerencial."
+            if total_faltas > 0 else
+            "Não foram identificadas faltas relevantes no período."
+        )
     }
