@@ -33,6 +33,7 @@
 {% block content %}
 <div class="container-fluid">
 
+  <!-- Filtros -->
   <form class="row g-3 mb-4" id="formRelatorio">
     <div class="col-md-4">
       <label class="form-label">Setor</label>
@@ -46,7 +47,7 @@
     </div>
 
     <div class="col-md-4">
-      <label class="form-label">Tipo de Relatório</label>
+      <label class="form-label">Tipo</label>
       <select class="form-select" name="tipo">
         <option value="SEMANAL">Semanal</option>
         <option value="MENSAL" selected>Mensal</option>
@@ -56,14 +57,20 @@
 
     <div class="col-md-4 d-flex align-items-end">
       <button class="btn btn-primary w-100" type="submit">
-        <i class="bi bi-file-earmark-bar-graph"></i> Gerar Relatório
+        <i class="bi bi-file-earmark-bar-graph"></i>
+        Gerar Relatório
       </button>
     </div>
   </form>
 
+  <!-- Resultado -->
   <div id="resultadoRelatorio"></div>
 
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="{{ url_for('static', filename='js/relatorios.js') }}"></script>
 {% endblock %}
 
 {% block scripts %}
