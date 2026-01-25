@@ -8,8 +8,12 @@ def _formatar_data_br(d: date) -> str:
     """Formata data para padrão brasileiro DD-MM-YYYY"""
     return d.strftime("%d-%m-%Y")
 
+
 def gerar_relatorio(setor, tipo):
     hoje = date.today()
+
+    if not setor:
+        setor = None
 
     if tipo == "SEMANAL":
         data_inicial = hoje - timedelta(days=7)
@@ -21,7 +25,7 @@ def gerar_relatorio(setor, tipo):
     # ===============================
     # Ranking de linhas por faltas
     # ===============================
-    query = """
+    base_query = """
         SELECT
             l.linha,
             COALESCE(SUM(lc.quantidade), 0) AS total_faltas
@@ -29,15 +33,27 @@ def gerar_relatorio(setor, tipo):
         JOIN lancamentos_cargos lc ON lc.lancamento_id = l.id
         WHERE lc.tipo = 'FALTA'
           AND l.data BETWEEN %s AND %s
-          AND (%s IS NULL OR l.setor = %s::text)
-        GROUP BY l.linha
-        ORDER BY total_faltas DESC
-        LIMIT 10
     """
+
+    if setor:
+        query = base_query + """
+          AND l.setor = %s
+          GROUP BY l.linha
+          ORDER BY total_faltas DESC
+          LIMIT 10
+        """
+        params = (data_inicial, hoje, setor)
+    else:
+        query = base_query + """
+          GROUP BY l.linha
+          ORDER BY total_faltas DESC
+          LIMIT 10
+        """
+        params = (data_inicial, hoje)
 
     with get_db() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
-            cur.execute(query, (data_inicial, hoje, setor, setor))
+            cur.execute(query, params)
             linhas = cur.fetchall() or []
 
     # ==========================================
@@ -114,8 +130,7 @@ def gerar_relatorio(setor, tipo):
                 linha["cargo_critico"] = cur.fetchone()
 
     return {
-        "periodo": f"{data_inicial} até {hoje}",
+        "periodo": f"{_formatar_data_br(data_inicial)} até {_formatar_data_br(hoje)}",
         "linhas": linhas,
         "cargo_critico": cargo_critico_global,
     }
-
