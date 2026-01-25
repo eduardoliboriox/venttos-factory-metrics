@@ -3,6 +3,7 @@ from app.extensions import get_db
 from psycopg.rows import dict_row
 from datetime import date, timedelta
 
+
 def gerar_relatorio(setor, tipo):
     hoje = date.today()
 
@@ -21,7 +22,7 @@ def gerar_relatorio(setor, tipo):
         JOIN lancamentos_cargos lc ON lc.lancamento_id = l.id
         WHERE lc.tipo = 'FALTA'
           AND l.data BETWEEN %s AND %s
-          AND (%s IS NULL OR l.setor = %s)
+          AND (%s IS NULL OR l.setor = %s::text)
         GROUP BY l.linha
         ORDER BY total_faltas DESC
         LIMIT 10
@@ -29,7 +30,10 @@ def gerar_relatorio(setor, tipo):
 
     with get_db() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
-            cur.execute(query, (data_inicial, hoje, setor, setor))
+            cur.execute(
+                query,
+                (data_inicial, hoje, setor, setor)
+            )
             linhas = cur.fetchall() or []
 
     cargo_query = """
@@ -54,5 +58,5 @@ def gerar_relatorio(setor, tipo):
     return {
         "periodo": f"{data_inicial} até {hoje}",
         "linhas": linhas,
-        "cargo_critico": cargo  
+        "cargo_critico": cargo
     }
