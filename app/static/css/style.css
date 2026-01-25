@@ -288,6 +288,35 @@ body {
     cursor: pointer;
   }
 
+/* =========================
+   FULLSCREEN LAYOUT MODE
+========================= */
+
+body.fullscreen-mode .sidebar {
+  display: none !important;
+}
+
+body.fullscreen-mode .main {
+  margin-left: 0 !important;
+}
+
+body.fullscreen-mode .desktop-header {
+  left: 0 !important;
+}
+
+body.fullscreen-mode .content {
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+/* segurança mobile */
+@media (max-width: 767px) {
+  body.fullscreen-mode .sidebar {
+    display: none !important;
+  }
+}
+
+
   #pcpTurnos {
     font-size: 1.05rem; /* texto acompanha o checkbox */
   }
