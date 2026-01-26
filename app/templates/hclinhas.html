@@ -8,7 +8,6 @@
   </span>
 
   <div class="ms-auto d-flex gap-2">
-
     <a href="{{ url_for('pages.cargos') }}" class="btn btn-outline-secondary">
       <i class="bi bi-arrow-left"></i> Voltar
     </a>
@@ -22,7 +21,6 @@
             onclick="toggleFullscreen()">
       <i class="bi bi-arrows-fullscreen"></i>
     </button>
-
   </div>
 </div>
 {% endblock %}
@@ -65,7 +63,6 @@
   <!-- LISTA -->
   <div class="card shadow-sm p-3">
     <h6 class="fw-bold mb-3">HC cadastrados</h6>
-
     <ul class="list-group" id="listaHC"></ul>
   </div>
 
@@ -81,6 +78,7 @@ const linhasPorSetor = {
   PTH:["PTH-01"]
 };
 
+// Atualiza opções de linha quando o setor muda
 document.getElementById("setor").addEventListener("change", e => {
   const linha = document.getElementById("linha");
   linha.innerHTML = "";
@@ -98,14 +96,58 @@ async function carregar() {
 
   dados.forEach(h => {
     ul.innerHTML += `
-      <li class="list-group-item d-flex justify-content-between">
-        ${h.setor} - ${h.linha} | HC: ${h.hc_padrao}
-        <button class="btn btn-sm btn-outline-danger"
-          onclick="excluir(${h.id})">
-          <i class="bi bi-trash"></i>
-        </button>
+      <li class="list-group-item d-flex justify-content-between align-items-center">
+        <span>${h.setor} - ${h.linha} | HC: ${h.hc_padrao}</span>
+        <div class="d-flex gap-2">
+          <button class="btn btn-sm btn-outline-secondary"
+            onclick="editar(${h.id}, '${h.setor}', '${h.linha}', ${h.hc_padrao})">
+            <i class="bi bi-pencil"></i>
+          </button>
+          <button class="btn btn-sm btn-outline-danger"
+            onclick="excluir(${h.id})">
+            <i class="bi bi-trash"></i>
+          </button>
+        </div>
       </li>`;
   });
+}
+
+function editar(id, setor, linha, hc_padrao) {
+  document.getElementById("setor").value = setor;
+  const selectLinha = document.getElementById("linha");
+  selectLinha.innerHTML = "";
+  (linhasPorSetor[setor] || []).forEach(l => {
+    selectLinha.innerHTML += `<option value="${l}" ${l===linha?'selected':''}>${l}</option>`;
+  });
+  document.querySelector('input[name="hc_padrao"]').value = hc_padrao;
+
+  const btn = document.querySelector('#formHC button');
+  btn.textContent = "Atualizar";
+
+  const form = document.getElementById("formHC");
+  form.onsubmit = async function(e) {
+    e.preventDefault();
+    const data = new FormData(e.target);
+    data.append("id", id);
+
+    await fetch("/api/hc-linhas", {
+      method: "PUT",
+      body: data
+    });
+
+    e.target.reset();
+    btn.textContent = "Salvar";
+    carregar();
+
+    // Restaura listener original
+    form.onsubmit = async function(e) {
+      e.preventDefault();
+      const data = new FormData(e.target);
+      await fetch("/api/hc-linhas", { method: "POST", body: data });
+      e.target.reset();
+      carregar();
+    };
+  };
 }
 
 async function excluir(id) {
@@ -116,15 +158,11 @@ async function excluir(id) {
   carregar();
 }
 
+// Listener inicial para salvar novo HC
 document.getElementById("formHC").addEventListener("submit", async e => {
   e.preventDefault();
   const data = new FormData(e.target);
-
-  await fetch("/api/hc-linhas", {
-    method: "POST",
-    body: data
-  });
-
+  await fetch("/api/hc-linhas", { method: "POST", body: data });
   e.target.reset();
   carregar();
 });
