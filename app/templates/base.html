@@ -46,7 +46,7 @@
     </a>
   
     <a href="{{ url_for('pages.lancamento') }}"
-       class="{% if request.endpoint == 'pages.lancamento' %}active{% endif %}">
+       class="{% if active_menu == 'lancamento' or request.endpoint == 'pages.lancamento' %}active{% endif %}">
       <i class="bi bi-plus-square"></i> Lançamentos
     </a>
   
@@ -56,7 +56,7 @@
     </a>
   
     <a href="{{ url_for('pages.cargos') }}"
-       class="{% if request.endpoint == 'pages.cargos' %}active{% endif %}">
+       class="{% if active_menu == 'cargos' or request.endpoint == 'pages.cargos' %}active{% endif %}">
       <i class="bi bi-people"></i> Cargos
     </a>
   </nav>
