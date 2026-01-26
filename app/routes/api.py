@@ -170,3 +170,26 @@ def api_powerbi_resumo():
         "kpis": resumo["kpis"],
         "ranking_faltas": ranking_linhas_faltas_powerbi(filtros)
     })
+
+
+@bp.route("/dashboard/resumo", methods=["GET"])
+def api_dashboard_resumo():
+    filtros = {
+        "data_inicial": request.args.get("data_inicial"),
+        "data_final": request.args.get("data_final"),
+        "turno": request.args.get("turno"),
+        "filial": request.args.get("filial")
+    }
+
+    from app.services.pcp_service import resumo_dashboard
+
+    dados = resumo_dashboard(filtros)
+
+    return jsonify({
+        "kpis": dados["kpis"],
+        "ranking_setor": dados["ranking_setor"],
+        "ranking_filial": dados["ranking_filial"],
+        "ranking_linhas": dados["ranking_linhas"],
+        "ranking_linhas_ferias": dados["ranking_linhas_ferias"],
+        "ranking_cargos": dados["ranking_cargos"]
+    })
