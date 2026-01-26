@@ -148,3 +148,25 @@ def api_excluir_hc_linha():
         hc_linhas_service.excluir(request.form.get("id"))
     )
 
+@bp.route("/powerbi/resumo", methods=["GET"])
+def api_powerbi_resumo():
+    filtros = {
+        "data_inicial": request.args.get("data_inicial"),
+        "data_final": request.args.get("data_final"),
+        "turno": request.args.get("turno"),
+        "filial": request.args.get("filial"),
+        "setor": request.args.get("setor"),
+        "linha": request.args.get("linha"),
+    }
+
+    from app.services.pcp_service import (
+        resumo_dashboard,
+        ranking_linhas_faltas_powerbi
+    )
+
+    resumo = resumo_dashboard(filtros)
+
+    return jsonify({
+        "kpis": resumo["kpis"],
+        "ranking_faltas": ranking_linhas_faltas_powerbi(filtros)
+    })
