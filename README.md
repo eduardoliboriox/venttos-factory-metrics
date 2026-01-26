@@ -1,31 +1,37 @@
 # Venttos – Factory Metrics
 
-**Venttos – Factory Metrics** é um sistema web desenvolvido para **engenharia, produção e PCP**, com foco em **controle de absenteísmo**, **análise de headcount**, **métricas operacionais** e **padronização de dados industriais**.
+**Venttos – Factory Metrics** é um sistema web de **inteligência operacional industrial**, desenvolvido para **engenharia, produção, PCP e liderança**, com foco em **controle de absenteísmo**, **análise de headcount**, **indicadores executivos** e **visualização de dados no estilo Power BI**.
 
-O projeto foi pensado para uso real em fábrica, priorizando **simplicidade**, **consistência de dados**, **baixo erro operacional** e **arquitetura limpa**.
+O projeto foi pensado para **uso real em ambiente fabril**, priorizando:
+
+* **confiabilidade dos dados**
+* **baixo erro operacional**
+* **leitura executiva**
+* **arquitetura limpa e escalável**
 
 ---
 
-## 🎯 Finalidade
+## 🎯 Finalidade do Sistema
 
-* Lançamento diário de **absenteísmo por setor, linha e turno**
+* Lançamento estruturado de **absenteísmo**
 * Cálculo automático de **HC real**
-* Registro de **faltas por cargo**
-* Dashboard com visão consolidada
-* Padronização de setores e linhas (sem digitação manual)
-* Base sólida para futuras análises de PCP e produtividade
+* Consolidação de faltas por **linha, setor e cargo**
+* **Dashboard operacional**
+* **Visão executiva estilo Power BI**
+* **Relatórios analíticos sob demanda**
+* Base sólida para decisões de **PCP, RH e Produção**
 
 ---
 
-## 🧠 Conceitos Importantes
+## 🧠 Conceitos-Chave do Projeto
 
 * **Setor → Linha dependente** (select dinâmico)
-* Evita erros de digitação e dados inconsistentes
-* Regras de negócio isoladas em *services*
-* Acesso ao banco isolado em *repositories*
-* Rotas HTML separadas de rotas REST
-
-Arquitetura inspirada em boas práticas de **DDD leve + Clean Architecture**.
+* Eliminação de digitação manual crítica
+* Dados padronizados (menos ruído, mais decisão)
+* **Services** concentram regras de negócio
+* **Repositories / SQL isolado**
+* **Rotas HTML separadas de rotas REST (API)**
+* Arquitetura inspirada em **DDD leve + Clean Architecture**
 
 ---
 
@@ -42,30 +48,72 @@ Arquitetura inspirada em boas práticas de **DDD leve + Clean Architecture**.
   * Turno
 * Definição de **HC padrão**
 * Cálculo automático de **HC real**
-* Inclusão de faltas por cargo
-* Envio dos dados via API REST
-
-### 📊 Dashboard
-
-* Visualização consolidada dos lançamentos
-* Indicadores operacionais
-* Base para métricas futuras
+* Registro de faltas por **cargo**
+* Envio estruturado via **API REST**
 
 ---
 
-## 📱 Plataforma
+### 📊 Dashboard Operacional
 
-* Interface responsiva
+* KPIs consolidados de absenteísmo
+* Indicadores por período
+* Base operacional para acompanhamento diário
+* Cards claros e leitura rápida
+
+---
+
+### 📈 Power BI (Visão Executiva)
+
+Tela dedicada com **experiência inspirada no Power BI**, sem dependência externa:
+
+* KPIs executivos
+* Ranking de linhas por absenteísmo
+* Gráficos de barras verticais (ranking)
+* Gráficos horizontais (distribuição)
+* Interação com **clique nas barras**
+* **Mini-modal analítico por linha**
+* Visual consistente, escuro, corporativo
+* Preparado para leitura por **diretoria e gerência**
+
+📌 *Objetivo:* permitir decisão rápida sem precisar abrir ferramentas externas.
+
+---
+
+### 📄 Relatórios Analíticos
+
+Tela exclusiva para geração de relatórios:
+
+* Filtros por:
+
+  * Setor
+  * Tipo (Semanal / Mensal / Anual)
+* Geração sob demanda via **API**
+* Ranking **Top 10 linhas com absenteísmo**
+* Identificação de **cargo crítico global**
+* Identificação de **cargo crítico por linha**
+* Cálculo de **percentual de impacto dentro da linha**
+* Texto analítico pronto para leitura executiva
+
+📌 *Objetivo:* apoiar reuniões, apresentações e decisões estratégicas.
+
+---
+
+## 📱 Interface & UX
+
+* Totalmente responsiva
 * Desktop e mobile
 * Layout mobile inspirado em **app nativo**
-* Sidebar no desktop com navegação destacada
+* Sidebar no desktop
+* Cards claros e leitura objetiva
+* Hierarquia visual pensada para dados
 
 ---
 
 ## ☁️ Infraestrutura
 
 * Deploy em **Railway**
-* Banco de dados **PostgreSQL**
+* Banco **PostgreSQL**
+* Gunicorn (produção)
 * Variáveis de ambiente via `.env`
 * Pronto para CI/CD
 
@@ -98,7 +146,8 @@ project/
 │   │   ├─ cargos_service.py
 │   │   ├─ lancamentos_service.py
 │   │   ├─ modelos_service.py
-│   │   └─ pcp_service.py
+│   │   ├─ pcp_service.py
+│   │   └─ relatorios_service.py
 │   │
 │   ├─ templates/             # Jinja2
 │   │   ├─ base.html
@@ -117,7 +166,8 @@ project/
 │       ├─ js/
 │       │   ├─ main.js
 │       │   ├─ pcp.js
-│       │   └─ powerbi.js
+│       │   ├─ powerbi.js
+│       │   └─ relatorios.js
 │       │
 │       ├─ images/
 │       └─ fonts/inter.woff2
