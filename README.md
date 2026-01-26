@@ -132,6 +132,7 @@ project/
 │   │   ├─ __init__.py
 │   │   ├─ atestados_repository.py
 │   │   ├─ cargos_repository.py
+│   │   ├─ hc_linhas_repository.py
 │   │   ├─ lancamentos_repository.py
 │   │   └─ modelos_repository.py
 │   │  
@@ -144,15 +145,18 @@ project/
 │   │   ├─ __init__.py
 │   │   ├─ atestados_service.py
 │   │   ├─ cargos_service.py
+│   │   ├─ hc_linhas_service.py
 │   │   ├─ lancamentos_service.py
 │   │   ├─ modelos_service.py
 │   │   ├─ pcp_service.py
 │   │   └─ relatorios_service.py
 │   │
 │   ├─ templates/             # Jinja2
+│   │   ├─ atestados.html
 │   │   ├─ base.html
 │   │   ├─ cargos.html
 │   │   ├─ dashboard.html
+│   │   ├─ hclinhas.html
 │   │   ├─ inicio.html
 │   │   ├─ lancamento.html
 │   │   ├─ powerbi.html
@@ -164,8 +168,10 @@ project/
 │       │   └─ style.css
 │       │
 │       ├─ js/
+│       │   ├─ dashboard-live.js
 │       │   ├─ main.js
 │       │   ├─ pcp.js
+│       │   ├─ powerbi-live.js
 │       │   ├─ powerbi.js
 │       │   └─ relatorios.js
 │       │
