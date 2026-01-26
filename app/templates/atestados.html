@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}Atestados{% endblock %}
+
+{% block page_title %}
+<div class="d-flex align-items-center w-100">
+  <span class="me-auto">
+    Venttos - Factory Metrics - Atestados
+  </span>
+
+  <div class="ms-auto d-flex gap-2">
+
+    <a href="{{ url_for('pages.lancamento') }}" class="btn btn-outline-secondary">
+      <i class="bi bi-arrow-left"></i> Voltar
+    </a>
+
+    <button class="btn btn-outline-dark"
+            type="button"
+            onclick="toggleFullscreen()">
+      <i class="bi bi-arrows-fullscreen"></i>
+    </button>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="alert alert-warning">
+    Página de Atestados / Abonos (conteúdo será definido).
+  </div>
+</div>
+{% endblock %}

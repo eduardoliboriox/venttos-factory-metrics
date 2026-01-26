@@ -96,6 +96,20 @@ def powerbi():
         **dados
     )
 
+@bp.route("/cargos/hc-linhas")
+def hc_linhas():
+    return render_template(
+        "hclinhas.html",
+        active_menu="cargos"  
+    )
+
+
+@bp.route("/lancamento/atestados")
+def atestados():
+    return render_template(
+        "atestados.html",
+        active_menu="lancamento"  
+    )
 
 
 
