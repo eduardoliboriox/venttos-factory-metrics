@@ -332,8 +332,8 @@ body.fullscreen-mode .content {
 }
 
 .kpi-card small {
-  font-size: 0.85rem;
-  color: #6c757d;        /* cinza Bootstrap */
+  font-size: 0.90rem;
+  color: #000000;        
   font-weight: 500;
 }
 
