@@ -202,14 +202,20 @@ function atualizarJsons(){
   document.getElementById("feriasJson").value = JSON.stringify(ferias);
 }
 
-/* ===================== LINHAS & HC ===================== */
+/* ===================== LINHAS ===================== */
+const linhasPorSetor = {
+  IM: ["IM-01","IM-02","IM-03","IM-04","IM-05","IM-06"],
+  PA: ["IP-COM","PA-01","PA-03","PA-04","PA-07","PA-08","PA-09","PA-13","WIFI"],
+  PTH: ["ADE-01","AXI-01","AXI-02","AXI-03","JUM-01","JUM-02","RAD-01","RAD-02","RAD-03","ROU-01","ROU-02","ROU-03"],
+  SMT: ["SMT-01","SMT-02","SMT-03","SMT-04","SMT-05","SMT-06","SMT-07","SMT-08","SMT-09"]
+};
+
 const setorSelect = document.getElementById("setorSelect");
 const linhaSelect = document.getElementById("linhaSelect");
 
-setorSelect.addEventListener("change", async () => {
+setorSelect.addEventListener("change", () => {
   linhaSelect.innerHTML = `<option value="">Selecione</option>`;
-  const resp = await fetch(`/api/linhas?setor=${setorSelect.value}`);
-  const linhas = await resp.json();
+  const linhas = linhasPorSetor[setorSelect.value] || [];
   linhas.forEach(l => linhaSelect.innerHTML += `<option value="${l}">${l}</option>`);
 });
 
@@ -235,7 +241,11 @@ form.addEventListener("submit", async e => {
     const result = await response.json();
     if (response.ok && result.success) {
       msgDiv.innerHTML = `<div class="alert alert-success">Lançamento salvo com sucesso! ✅</div>`;
-      form.reset(); cargos=[]; ferias=[]; document.getElementById("listaCargos").innerHTML=""; document.getElementById("listaFerias").innerHTML="";
+      form.reset();
+      cargos = [];
+      ferias = [];
+      document.getElementById("listaCargos").innerHTML = "";
+      document.getElementById("listaFerias").innerHTML = "";
       atualizarHCReal();
     } else {
       msgDiv.innerHTML = `<div class="alert alert-danger">Erro: ${result.error || 'Verifique os dados.'}</div>`;
@@ -247,3 +257,4 @@ form.addEventListener("submit", async e => {
 });
 </script>
 {% endblock %}
+
