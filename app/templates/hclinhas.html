@@ -29,8 +29,106 @@
 
 {% block content %}
 <div class="container-fluid">
-  <div class="alert alert-info">
-    Página de HC por Linha (conteúdo será definido).
+
+  <!-- FORM -->
+  <div class="card shadow-sm p-3 mb-4">
+    <h6 class="fw-bold mb-3">Cadastrar HC padrão</h6>
+
+    <form id="formHC" class="row g-3">
+      <div class="col-md-3">
+        <label class="form-label">Setor</label>
+        <select name="setor" id="setor" class="form-select" required>
+          <option value="">Selecione</option>
+          <option value="IM">IM</option>
+          <option value="PA">PA</option>
+          <option value="SMT">SMT</option>
+          <option value="PTH">PTH</option>
+        </select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">Linha</label>
+        <select name="linha" id="linha" class="form-select" required></select>
+      </div>
+
+      <div class="col-md-3">
+        <label class="form-label">HC padrão</label>
+        <input type="number" name="hc_padrao" class="form-control" required>
+      </div>
+
+      <div class="col-md-3 d-flex align-items-end">
+        <button class="btn btn-primary w-100">Salvar</button>
+      </div>
+    </form>
   </div>
+
+  <!-- LISTA -->
+  <div class="card shadow-sm p-3">
+    <h6 class="fw-bold mb-3">HC cadastrados</h6>
+
+    <ul class="list-group" id="listaHC"></ul>
+  </div>
+
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const linhasPorSetor = {
+  IM:["IM-01","IM-02","IM-03","IM-04"],
+  PA:["PA-01","PA-02"],
+  SMT:["SMT-01","SMT-02"],
+  PTH:["PTH-01"]
+};
+
+document.getElementById("setor").addEventListener("change", e => {
+  const linha = document.getElementById("linha");
+  linha.innerHTML = "";
+  (linhasPorSetor[e.target.value] || []).forEach(l => {
+    linha.innerHTML += `<option value="${l}">${l}</option>`;
+  });
+});
+
+async function carregar() {
+  const resp = await fetch("/api/hc-linhas");
+  const dados = await resp.json();
+
+  const ul = document.getElementById("listaHC");
+  ul.innerHTML = "";
+
+  dados.forEach(h => {
+    ul.innerHTML += `
+      <li class="list-group-item d-flex justify-content-between">
+        ${h.setor} - ${h.linha} | HC: ${h.hc_padrao}
+        <button class="btn btn-sm btn-outline-danger"
+          onclick="excluir(${h.id})">
+          <i class="bi bi-trash"></i>
+        </button>
+      </li>`;
+  });
+}
+
+async function excluir(id) {
+  await fetch("/api/hc-linhas", {
+    method: "DELETE",
+    body: new URLSearchParams({id})
+  });
+  carregar();
+}
+
+document.getElementById("formHC").addEventListener("submit", async e => {
+  e.preventDefault();
+  const data = new FormData(e.target);
+
+  await fetch("/api/hc-linhas", {
+    method: "POST",
+    body: data
+  });
+
+  e.target.reset();
+  carregar();
+});
+
+carregar();
+</script>
 {% endblock %}
