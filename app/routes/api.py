@@ -9,7 +9,7 @@ from app.services.lancamentos_service import (
 from app.services.pcp_service import ranking_linhas_ferias
 from app.services.atestados_service import registrar_atestado
 from app.services.relatorios_service import gerar_relatorio
-
+from app.services import hc_linhas_service
 
 bp = Blueprint("api", __name__)
 
@@ -132,4 +132,19 @@ def api_relatorios():
     dados = gerar_relatorio(setor, tipo)
     return jsonify(dados)
 
+@bp.route("/hc-linhas", methods=["GET"])
+def api_listar_hc_linhas():
+    return jsonify(hc_linhas_service.listar())
+
+
+@bp.route("/hc-linhas", methods=["POST"])
+def api_salvar_hc_linha():
+    return jsonify(hc_linhas_service.salvar(request.form))
+
+
+@bp.route("/hc-linhas", methods=["DELETE"])
+def api_excluir_hc_linha():
+    return jsonify(
+        hc_linhas_service.excluir(request.form.get("id"))
+    )
 
