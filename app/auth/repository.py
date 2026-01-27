@@ -1,33 +1,69 @@
 from app.extensions import get_db
 from psycopg.rows import dict_row
 
-def get_user_by_provider(provider, provider_id):
+
+def get_user_by_username(username):
     with get_db() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
-            cur.execute("""
-              SELECT * FROM users
-              WHERE provider=%s AND provider_id=%s
-            """, (provider, provider_id))
+            cur.execute(
+                "SELECT * FROM users WHERE username=%s",
+                (username,)
+            )
             return cur.fetchone()
 
-def create_user(data):
+
+def create_local_user(data):
     with get_db() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
             cur.execute("""
-              INSERT INTO users (username, email, provider, provider_id)
-              VALUES (%s,%s,%s,%s)
-              RETURNING *
+                INSERT INTO users
+                (username, full_name, matricula, setor, password_hash, provider, is_active)
+                VALUES (%s,%s,%s,%s,%s,'local',FALSE)
+                RETURNING *
             """, (
                 data["username"],
-                data["email"],
-                data["provider"],
-                data["provider_id"]
+                data["full_name"],
+                data["matricula"],
+                data["setor"],
+                data["password_hash"]
             ))
             conn.commit()
             return cur.fetchone()
 
-def get_user_by_id(user_id):
+
+def list_pending_users(search=None):
     with get_db() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
-            cur.execute("SELECT * FROM users WHERE id=%s", (user_id,))
-            return cur.fetchone()
+            if search:
+                cur.execute("""
+                    SELECT * FROM users
+                    WHERE is_active=FALSE
+                    AND provider='local'
+                    AND full_name ILIKE %s
+                    ORDER BY created_at DESC
+                """, (f"%{search}%",))
+            else:
+                cur.execute("""
+                    SELECT * FROM users
+                    WHERE is_active=FALSE
+                    AND provider='local'
+                    ORDER BY created_at DESC
+                """)
+            return cur.fetchall()
+
+
+def approve_user(user_id):
+    with get_db() as conn:
+        with conn.cursor() as cur:
+            cur.execute(
+                "UPDATE users SET is_active=TRUE WHERE id=%s",
+                (user_id,)
+            )
+            conn.commit()
+
+
+def deny_user(user_id):
+    with get_db() as conn:
+        with conn.cursor() as cur:
+            cur.execute("DELETE FROM users WHERE id=%s", (user_id,))
+            conn.commit()
