@@ -146,3 +146,26 @@ def count_users():
             row = cur.fetchone()
             return row["total"]
 
+
+# app/auth/repository.py
+
+def list_all_users(search=None):
+    with get_db() as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
+            if search:
+                cur.execute(
+                    """
+                    SELECT * FROM users
+                    WHERE full_name ILIKE %s OR username ILIKE %s OR setor ILIKE %s
+                    ORDER BY created_at DESC
+                    """,
+                    (f"%{search}%", f"%{search}%", f"%{search}%")
+                )
+            else:
+                cur.execute(
+                    """
+                    SELECT * FROM users
+                    ORDER BY created_at DESC
+                    """
+                )
+            return cur.fetchall()

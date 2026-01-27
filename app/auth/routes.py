@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, login_required, current_user
 from authlib.integrations.flask_client import OAuth
 from app.auth.service import get_or_create_user, register_user, authenticate_local
 from app.auth.models import User
-from app.auth.repository import list_pending_users, approve_user, deny_user
+from app.auth.repository import list_pending_users, approve_user, deny_user, list_all_users
 from app.auth.decorators import admin_required
 
 bp = Blueprint("auth", __name__)
@@ -143,4 +143,16 @@ def reject_user_route(user_id):
     deny_user(user_id)
     flash("Usuário removido", "info")
     return redirect(url_for("auth.admin_users"))
+
+
+@bp.route("/admin/users/all")
+@login_required
+@admin_required
+def admin_users_all():
+    """
+    Página para exibir TODOS os usuários (ativos e pendentes)
+    """
+    search = request.args.get("q")
+    users = list_all_users(search)
+    return render_template("auth/users_all.html", users=users)
 
