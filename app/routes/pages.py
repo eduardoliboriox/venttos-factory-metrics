@@ -126,6 +126,9 @@ def atestados():
         active_menu="lancamento"
     )
 
+@bp.route("/login")
+def login():
+    return render_template("auth/login.html")
 
 
 
