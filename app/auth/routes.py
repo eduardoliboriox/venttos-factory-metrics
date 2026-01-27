@@ -115,7 +115,6 @@ def register():
 
 
 @bp.route("/admin/users")
-@login_required
 def admin_users():
     if not current_user.is_admin:
         return redirect(url_for("pages.dashboard"))
