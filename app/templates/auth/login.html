@@ -4,39 +4,112 @@
 {% block content %}
 <div class="container vh-100 d-flex align-items-center justify-content-center">
 
-  <div class="card shadow-sm border-0 p-4" style="max-width: 420px; width:100%;">
-    
+  <div class="card shadow-sm border-0 p-4" style="max-width:460px; width:100%;">
+
     <!-- LOGO -->
     <div class="text-center mb-4">
       <img src="{{ url_for('static', filename='images/logos/logo-sidebar-desktop.png') }}"
-           alt="Venttos"
-           style="max-height:70px;">
+           alt="Venttos" style="max-height:70px;">
       <h5 class="mt-3 mb-0">Factory Metrics</h5>
       <small class="text-muted">Acesso corporativo</small>
     </div>
 
-    <!-- BOTÕES -->
-    <div class="d-grid gap-3">
+    <!-- LOGIN LOCAL -->
+    <form method="post" action="{{ url_for('auth.login_local') }}">
+      <div class="mb-3">
+        <label class="form-label">Usuário</label>
+        <input type="text" name="username" class="form-control" required>
+      </div>
 
+      <div class="mb-3">
+        <label class="form-label">Senha</label>
+        <input type="password" name="password" class="form-control" required>
+      </div>
+
+      {% if error %}
+        <div class="alert alert-danger py-2">{{ error }}</div>
+      {% endif %}
+
+      {% if success %}
+        <div class="alert alert-success py-2">{{ success }}</div>
+      {% endif %}
+
+      <button class="btn btn-primary w-100 mb-3">
+        Entrar
+      </button>
+    </form>
+
+    <div class="text-center mb-3">
+      <button class="btn btn-link p-0" data-bs-toggle="collapse" data-bs-target="#register">
+        Criar conta
+      </button>
+    </div>
+
+    <!-- CADASTRO -->
+    <div id="register" class="collapse">
+      <form method="post" action="{{ url_for('auth.register') }}">
+
+        <div class="mb-2">
+          <label class="form-label">Nome completo</label>
+          <input type="text" name="full_name" class="form-control" required>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">Matrícula</label>
+          <input type="text" name="matricula" class="form-control" required>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">Setor</label>
+          <select name="setor" class="form-select" required>
+            <option value="">Selecione</option>
+            <option>Direção</option>
+            <option>Engenharia</option>
+            <option>Estoque</option>
+            <option>PCP</option>
+            <option>Produção</option>
+          </select>
+        </div>
+
+        <div class="mb-2">
+          <label class="form-label">Senha</label>
+          <input type="password" name="password" class="form-control" required>
+        </div>
+
+        <div class="mb-3">
+          <label class="form-label">Confirmar senha</label>
+          <input type="password" name="password_confirm" class="form-control" required>
+        </div>
+
+        <button class="btn btn-outline-primary w-100">
+          Cadastrar
+        </button>
+
+        {% if register_msg %}
+          <div class="alert alert-info mt-3 py-2 text-center">
+            {{ register_msg }}
+          </div>
+        {% endif %}
+      </form>
+    </div>
+
+    <hr class="my-4">
+
+    <!-- OAUTH -->
+    <div class="d-grid gap-2">
       <a href="{{ url_for('auth.login_google') }}"
-         class="btn btn-outline-danger btn-lg">
-        <i class="bi bi-google me-2"></i>
-        Entrar com Google
+         class="btn btn-outline-danger">
+        <i class="bi bi-google me-2"></i> Entrar com Google
       </a>
 
       <a href="{{ url_for('auth.login_github') }}"
-         class="btn btn-outline-dark btn-lg">
-        <i class="bi bi-github me-2"></i>
-        Entrar com GitHub
+         class="btn btn-outline-dark">
+        <i class="bi bi-github me-2"></i> Entrar com GitHub
       </a>
-
     </div>
 
-    <!-- FOOTER -->
     <div class="text-center mt-4">
-      <small class="text-muted">
-        Venttos © {{ now().year }}
-      </small>
+      <small class="text-muted">Venttos © {{ now().year }}</small>
     </div>
 
   </div>
