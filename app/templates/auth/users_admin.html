@@ -13,14 +13,6 @@
       <i class="bi bi-arrow-left"></i> Voltar
     </a>
 
-    <a href="{{ url_for('pages.relatorios') }}" class="btn btn-outline-primary">
-      <i class="bi bi-file-earmark-text"></i> Relatórios
-    </a>
-
-    <a href="{{ url_for('pages.powerbi') }}" class="btn btn-outline-success">
-      <i class="bi bi-bar-chart"></i> Power BI
-    </a>
-
     {% if current_user.is_authenticated and current_user.is_admin %}
     <a href="{{ url_for('auth.admin_users') }}"
        class="btn btn-outline-danger">
