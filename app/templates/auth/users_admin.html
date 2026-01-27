@@ -41,11 +41,12 @@ Usuários cadastrados
         </td>
         <td class="text-end">
           {% if not u.is_active %}
-          <a href="{{ url_for('auth.approve_user', user_id=u.id) }}"
+          <a href="{{ url_for('auth.approve_user_route', user_id=u.id) }}"
              class="btn btn-sm btn-outline-success">
             Aprovar
           </a>
-          <a href="{{ url_for('auth.reject_user', user_id=u.id) }}"
+          
+          <a href="{{ url_for('auth.reject_user_route', user_id=u.id) }}"
              class="btn btn-sm btn-outline-danger">
             Negar
           </a>
