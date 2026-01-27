@@ -2,9 +2,19 @@ from app.extensions import get_db
 from psycopg.rows import dict_row
 
 
-# =========================
-# GENERIC USERS
-# =========================
+# =====================================================
+# CORE USERS (Flask-Login / OAuth / Local)
+# =====================================================
+
+def get_user_by_id(user_id):
+    with get_db() as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute(
+                "SELECT * FROM users WHERE id=%s",
+                (user_id,)
+            )
+            return cur.fetchone()
+
 
 def get_user_by_provider(provider, provider_id):
     with get_db() as conn:
@@ -40,9 +50,9 @@ def create_user(data):
             return cur.fetchone()
 
 
-# =========================
+# =====================================================
 # LOCAL AUTH
-# =========================
+# =====================================================
 
 def get_user_by_username(username):
     with get_db() as conn:
@@ -76,9 +86,9 @@ def create_local_user(data):
             return cur.fetchone()
 
 
-# =========================
+# =====================================================
 # ADMIN
-# =========================
+# =====================================================
 
 def list_pending_users(search=None):
     with get_db() as conn:
