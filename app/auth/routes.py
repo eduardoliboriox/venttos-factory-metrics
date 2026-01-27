@@ -4,6 +4,7 @@ from authlib.integrations.flask_client import OAuth
 from app.auth.service import get_or_create_user, register_user, authenticate_local
 from app.auth.models import User
 from app.auth.repository import list_pending_users, approve_user, deny_user
+from app.auth.decorators import admin_required
 
 bp = Blueprint("auth", __name__)
 oauth = OAuth()
@@ -115,10 +116,9 @@ def register():
 
 
 @bp.route("/admin/users")
+@login_required
+@admin_required
 def admin_users():
-    if not current_user.is_admin:
-        return redirect(url_for("pages.dashboard"))
-
     search = request.args.get("q")
     users = list_pending_users(search)
     return render_template("auth/users_admin.html", users=users)
