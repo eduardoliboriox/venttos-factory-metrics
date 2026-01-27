@@ -102,11 +102,15 @@ def login_local():
 
 @bp.route("/register", methods=["POST"])
 def register():
-    user = register_user(request.form)
-    flash(
-        f"Usuário {user['username']} criado. Aguardando aprovação",
-        "success"
-    )
+    try:
+        user = register_user(request.form)
+        flash(
+            f"Usuário {user['username']} criado. Aguardando aprovação",
+            "success"
+        )
+    except ValueError as e:
+        flash(str(e), "danger")
+
     return redirect(url_for("auth.login"))
 
 

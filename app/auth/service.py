@@ -1,9 +1,11 @@
-from app.auth.repository import get_user_by_provider, create_user
-from werkzeug.security import generate_password_hash, check_password_hash
 from app.auth.repository import (
+    get_user_by_provider,
+    create_user,
     create_local_user,
     get_user_by_username
 )
+from werkzeug.security import generate_password_hash, check_password_hash
+
 
 def get_or_create_user(profile, provider):
     provider_id = profile["id"]
@@ -21,18 +23,24 @@ def get_or_create_user(profile, provider):
         "provider_id": provider_id
     })
 
+
 def generate_username(full_name: str) -> str:
     parts = full_name.strip().lower().split()
     return f"{parts[0]}.{parts[-1]}"
 
 
 def register_user(form):
+    # 🔐 validação mínima
+    if form["password"] != form["password_confirm"]:
+        raise ValueError("As senhas não conferem")
+
     username = generate_username(form["full_name"])
 
     password_hash = generate_password_hash(form["password"])
 
     return create_local_user({
         "username": username,
+        "email": form["email"],
         "full_name": form["full_name"],
         "matricula": form["matricula"],
         "setor": form["setor"],
