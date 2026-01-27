@@ -1,0 +1,13 @@
+from flask_login import UserMixin
+from app.auth.repository import get_user_by_id
+
+class User(UserMixin):
+    def __init__(self, data):
+        self.id = data["id"]
+        self.username = data["username"]
+        self.email = data["email"]
+
+    @staticmethod
+    def get(user_id):
+        data = get_user_by_id(user_id)
+        return User(data) if data else None
