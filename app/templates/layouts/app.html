@@ -22,13 +22,26 @@
     <div class="avatar">
       <img src="{{ url_for('static', filename='images/logos/logo.jpeg') }}" alt="Venttos">
     </div>
+
     <span class="username fw-bold">Factory Metrics</span>
+
+    {% if current_user.is_authenticated %}
+      <span class="username fw-semibold ms-2">
+        {{ current_user.username }}
+      </span>
+    {% endif %}
   </div>
 
+  {% if current_user.is_authenticated %}
   <div class="mobile-right">
-    <i class="bi bi-bell"></i>
+    <a href="{{ url_for('auth.logout') }}"
+       class="btn btn-sm btn-outline-secondary">
+      Sair
+    </a>
   </div>
+  {% endif %}
 </header>
+
 
 <!-- ================= APP ================= -->
 <div class="app">
