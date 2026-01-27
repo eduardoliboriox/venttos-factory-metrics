@@ -1,0 +1,70 @@
+{% extends "layouts/app.html" %}
+{% block title %}Administração de Usuários{% endblock %}
+
+{% block page_title %}
+Usuários cadastrados
+{% endblock %}
+
+{% block content %}
+<div class="card shadow-sm p-3">
+
+  <div class="d-flex mb-3">
+    <input type="text"
+           id="search"
+           class="form-control me-2"
+           placeholder="Buscar por nome, usuário ou setor">
+    <i class="bi bi-search fs-4 text-muted"></i>
+  </div>
+
+  <table class="table table-hover align-middle">
+    <thead>
+      <tr>
+        <th>Usuário</th>
+        <th>Nome</th>
+        <th>Setor</th>
+        <th>Status</th>
+        <th class="text-end">Ações</th>
+      </tr>
+    </thead>
+    <tbody id="usersTable">
+      {% for u in users %}
+      <tr>
+        <td>{{ u.username }}</td>
+        <td>{{ u.full_name }}</td>
+        <td>{{ u.setor }}</td>
+        <td>
+          {% if u.is_active %}
+            <span class="badge bg-success">Ativo</span>
+          {% else %}
+            <span class="badge bg-warning text-dark">Pendente</span>
+          {% endif %}
+        </td>
+        <td class="text-end">
+          {% if not u.is_active %}
+          <a href="{{ url_for('auth.approve_user', user_id=u.id) }}"
+             class="btn btn-sm btn-outline-success">
+            Aprovar
+          </a>
+          <a href="{{ url_for('auth.reject_user', user_id=u.id) }}"
+             class="btn btn-sm btn-outline-danger">
+            Negar
+          </a>
+          {% endif %}
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+</div>
+
+<script>
+document.getElementById("search").addEventListener("input", function () {
+  const value = this.value.toLowerCase();
+  document.querySelectorAll("#usersTable tr").forEach(row => {
+    row.style.display = row.innerText.toLowerCase().includes(value)
+      ? "" : "none";
+  });
+});
+</script>
+{% endblock %}
