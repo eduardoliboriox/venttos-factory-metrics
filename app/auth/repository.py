@@ -138,6 +138,8 @@ def deny_user(user_id):
 
 def count_users():
     with get_db() as conn:
-        with conn.cursor() as cur:
-            cur.execute("SELECT COUNT(*) FROM users")
-            return cur.fetchone()[0]
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute("SELECT COUNT(*) AS total FROM users")
+            row = cur.fetchone()
+            return row["total"]
+
