@@ -6,6 +6,8 @@ class User(UserMixin):
         self.id = data["id"]
         self.username = data["username"]
         self.email = data["email"]
+        self.is_admin = data.get("is_admin", False)
+        self.is_active = data.get("is_active", False)
 
     @staticmethod
     def get(user_id):
