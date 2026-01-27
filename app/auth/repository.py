@@ -2,12 +2,54 @@ from app.extensions import get_db
 from psycopg.rows import dict_row
 
 
+# =========================
+# GENERIC USERS
+# =========================
+
+def get_user_by_provider(provider, provider_id):
+    with get_db() as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute(
+                """
+                SELECT * FROM users
+                WHERE provider=%s AND provider_id=%s
+                """,
+                (provider, provider_id),
+            )
+            return cur.fetchone()
+
+
+def create_user(data):
+    with get_db() as conn:
+        with conn.cursor(row_factory=dict_row) as cur:
+            cur.execute(
+                """
+                INSERT INTO users
+                (username, email, provider, provider_id, is_active)
+                VALUES (%s,%s,%s,%s,TRUE)
+                RETURNING *
+                """,
+                (
+                    data["username"],
+                    data["email"],
+                    data["provider"],
+                    data["provider_id"],
+                ),
+            )
+            conn.commit()
+            return cur.fetchone()
+
+
+# =========================
+# LOCAL AUTH
+# =========================
+
 def get_user_by_username(username):
     with get_db() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
             cur.execute(
                 "SELECT * FROM users WHERE username=%s",
-                (username,)
+                (username,),
             )
             return cur.fetchone()
 
@@ -15,40 +57,52 @@ def get_user_by_username(username):
 def create_local_user(data):
     with get_db() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
-            cur.execute("""
+            cur.execute(
+                """
                 INSERT INTO users
                 (username, full_name, matricula, setor, password_hash, provider, is_active)
                 VALUES (%s,%s,%s,%s,%s,'local',FALSE)
                 RETURNING *
-            """, (
-                data["username"],
-                data["full_name"],
-                data["matricula"],
-                data["setor"],
-                data["password_hash"]
-            ))
+                """,
+                (
+                    data["username"],
+                    data["full_name"],
+                    data["matricula"],
+                    data["setor"],
+                    data["password_hash"],
+                ),
+            )
             conn.commit()
             return cur.fetchone()
 
+
+# =========================
+# ADMIN
+# =========================
 
 def list_pending_users(search=None):
     with get_db() as conn:
         with conn.cursor(row_factory=dict_row) as cur:
             if search:
-                cur.execute("""
+                cur.execute(
+                    """
                     SELECT * FROM users
                     WHERE is_active=FALSE
-                    AND provider='local'
-                    AND full_name ILIKE %s
+                      AND provider='local'
+                      AND full_name ILIKE %s
                     ORDER BY created_at DESC
-                """, (f"%{search}%",))
+                    """,
+                    (f"%{search}%",),
+                )
             else:
-                cur.execute("""
+                cur.execute(
+                    """
                     SELECT * FROM users
                     WHERE is_active=FALSE
-                    AND provider='local'
+                      AND provider='local'
                     ORDER BY created_at DESC
-                """)
+                    """
+                )
             return cur.fetchall()
 
 
@@ -57,7 +111,7 @@ def approve_user(user_id):
         with conn.cursor() as cur:
             cur.execute(
                 "UPDATE users SET is_active=TRUE WHERE id=%s",
-                (user_id,)
+                (user_id,),
             )
             conn.commit()
 
@@ -65,5 +119,8 @@ def approve_user(user_id):
 def deny_user(user_id):
     with get_db() as conn:
         with conn.cursor() as cur:
-            cur.execute("DELETE FROM users WHERE id=%s", (user_id,))
+            cur.execute(
+                "DELETE FROM users WHERE id=%s",
+                (user_id,),
+            )
             conn.commit()
