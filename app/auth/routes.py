@@ -124,3 +124,24 @@ def admin_users():
     users = list_pending_users(search)
     return render_template("auth/users_admin.html", users=users)
 
+@bp.route("/admin/users/<int:user_id>/approve")
+@login_required
+def approve_user_route(user_id):
+    if not current_user.is_admin:
+        return redirect(url_for("pages.dashboard"))
+
+    approve_user(user_id)
+    flash("Usuário aprovado com sucesso", "success")
+    return redirect(url_for("auth.admin_users"))
+
+
+@bp.route("/admin/users/<int:user_id>/deny")
+@login_required
+def reject_user_route(user_id):
+    if not current_user.is_admin:
+        return redirect(url_for("pages.dashboard"))
+
+    deny_user(user_id)
+    flash("Usuário removido", "info")
+    return redirect(url_for("auth.admin_users"))
+
