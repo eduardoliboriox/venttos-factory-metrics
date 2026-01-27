@@ -70,8 +70,9 @@ def create_local_user(data):
             cur.execute(
                 """
                 INSERT INTO users
-                (username, email, full_name, matricula, setor, password_hash, provider, is_active)
-                VALUES (%s,%s,%s,%s,%s,%s,'local',FALSE)
+                (username, email, full_name, matricula, setor,
+                 password_hash, provider, is_active, is_admin)
+                VALUES (%s,%s,%s,%s,%s,%s,'local',%s,%s)
                 RETURNING *
                 """,
                 (
@@ -134,3 +135,9 @@ def deny_user(user_id):
                 (user_id,),
             )
             conn.commit()
+
+def count_users():
+    with get_db() as conn:
+        with conn.cursor() as cur:
+            cur.execute("SELECT COUNT(*) FROM users")
+            return cur.fetchone()[0]
