@@ -24,9 +24,16 @@
     {% if current_user.is_authenticated and current_user.is_admin %}
     <a href="{{ url_for('auth.admin_users') }}"
        class="btn btn-outline-danger">
-      <i class="bi bi-shield-lock"></i> Admin
+      <i class="bi bi-shield-lock"></i> Usuários pendentes
     </a>
     {% endif %}
+
+    {% if current_user.is_authenticated and current_user.is_admin %}
+    <a href="{{ url_for('auth.admin_users_all') }}"
+       class="btn btn-outline-primary">
+      <i class="bi bi-list-ul"></i> Todos os usuários
+    </a>
+    {% endif %} 
 
     <button class="btn btn-outline-dark"
             type="button"
