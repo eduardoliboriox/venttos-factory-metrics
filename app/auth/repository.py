@@ -82,10 +82,13 @@ def create_local_user(data):
                     data["matricula"],
                     data["setor"],
                     data["password_hash"],
+                    data["is_active"],
+                    data["is_admin"],
                 ),
             )
             conn.commit()
             return cur.fetchone()
+
 
 # =====================================================
 # ADMIN
