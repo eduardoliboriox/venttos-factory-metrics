@@ -1,8 +1,9 @@
-from flask import Blueprint, redirect, url_for, render_template, current_app
-from flask_login import login_user, logout_user
+from flask import Blueprint, redirect, url_for, render_template, current_app, request, flash
+from flask_login import login_user, logout_user, login_required, current_user
 from authlib.integrations.flask_client import OAuth
-from app.auth.service import get_or_create_user
+from app.auth.service import get_or_create_user, register_user, authenticate_local
 from app.auth.models import User
+from app.auth.repository import list_pending_users, approve_user, deny_user
 
 bp = Blueprint("auth", __name__)
 oauth = OAuth()
@@ -77,3 +78,45 @@ def github_callback():
 def logout():
     logout_user()
     return redirect(url_for("auth.login"))
+
+
+
+@bp.route("/login/local", methods=["POST"])
+def login_local():
+    username = request.form["username"]
+    password = request.form["password"]
+
+    result = authenticate_local(username, password)
+
+    if result == "PENDING":
+        flash("Usuário aguardando aprovação", "warning")
+        return redirect(url_for("auth.login"))
+
+    if not result:
+        flash("Usuário ou senha inválidos", "danger")
+        return redirect(url_for("auth.login"))
+
+    login_user(User(result))
+    return redirect(url_for("pages.dashboard"))
+
+
+@bp.route("/register", methods=["POST"])
+def register():
+    user = register_user(request.form)
+    flash(
+        f"Usuário {user['username']} criado. Aguardando aprovação",
+        "success"
+    )
+    return redirect(url_for("auth.login"))
+
+
+@bp.route("/admin/users")
+@login_required
+def admin_users():
+    if not current_user.is_admin:
+        return redirect(url_for("pages.dashboard"))
+
+    search = request.args.get("q")
+    users = list_pending_users(search)
+    return render_template("auth/users_admin.html", users=users)
+
