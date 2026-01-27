@@ -337,3 +337,11 @@ body.fullscreen-mode .content {
   font-weight: 500;
 }
 
+.username {
+  max-width: 120px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
