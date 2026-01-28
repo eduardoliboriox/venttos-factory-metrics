@@ -211,7 +211,7 @@ project/
 │   │   ├─ inicio.html
 │   │   ├─ lancamento.html
 │   │   ├─ powerbi.html
-│   │   ├─ relatorios.html
+│   │   └─ relatorios.html
 │   │
 │   └─ static/
 │       ├─ css/
