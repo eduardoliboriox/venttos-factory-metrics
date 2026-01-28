@@ -30,12 +30,12 @@
   <!-- DIREITA: USUÁRIO + SAIR -->
   {% if current_user.is_authenticated %}
   <div class="mobile-right d-flex align-items-center gap-2">
-    <span class="username fw-semibold text-primary">
+    <span class="username fw-semibold text-secondary">
       {{ current_user.username }}
     </span>
 
     <a href="{{ url_for('auth.logout') }}"
-       class="btn btn-sm btn-outline-primary">
+       class="btn btn-sm btn-outline-secondary">
       Sair
     </a>
   </div>
