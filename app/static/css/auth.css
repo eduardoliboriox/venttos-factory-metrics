@@ -115,3 +115,25 @@
   justify-content: center;
   line-height: 1;
 }
+
+@media (max-width: 576px) {
+
+  .auth-card-wrapper {
+    padding: 16px;
+  }
+
+  .auth-card {
+    max-width: 100%;
+    padding: 20px;
+    border-radius: 12px;
+  }
+
+  .auth-card h4 {
+    font-size: 1.25rem;
+  }
+
+  .auth-card small {
+    font-size: 0.9rem;
+  }
+
+}
