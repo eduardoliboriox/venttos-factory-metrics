@@ -344,4 +344,10 @@ body.fullscreen-mode .content {
   text-overflow: ellipsis;
 }
 
+.mobile-right {
+  display: flex;
+  align-items: center;
+  gap: 8px; /* username perto do botão, mas sem colar */
+}
+
 
