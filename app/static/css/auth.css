@@ -93,6 +93,10 @@
   justify-content: center;
   line-height: 1;
 }
+
+/* =========================
+   MOBILE
+========================= */
 @media (max-width: 991px) {
 
   .auth-header {
