@@ -108,3 +108,10 @@
   background-color: #6f42c1;
   color: #fff;
 }
+
+.auth-header .btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
