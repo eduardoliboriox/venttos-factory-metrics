@@ -91,10 +91,10 @@
 .auth-visual {
   background-image: url("../images/banners/desktop-ilustraction.jpg");
   background-repeat: no-repeat;
-
-  /* AJUSTE IMPORTANTE */
   background-size: contain;
   background-position: center left;
 
   padding: 40px;
+  min-height: 100%;
 }
+
