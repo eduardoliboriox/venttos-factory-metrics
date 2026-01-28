@@ -151,3 +151,17 @@
   padding: 24px;
   border-radius: 14px;
 }
+
+/* =========================
+   MOBILE LOGIN CHOICE
+   Ajuste vertical dos botões
+========================= */
+
+.mobile-screen {
+  position: relative;
+}
+
+.mobile-actions {
+  width: 100%;
+  transform: translateY(-48px); /* sobe os botões */
+}
