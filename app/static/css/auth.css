@@ -51,28 +51,6 @@
   box-shadow: 0 20px 40px rgba(0,0,0,.08);
 }
 
-/* =========================
-   MOBILE
-========================= */
-
-@media (max-width: 991px) {
-
-  .auth-header {
-    display: none;
-  }
-
-  .auth-container {
-    grid-template-columns: 1fr;
-  }
-
-  .auth-visual {
-    display: none;
-  }
-
-  .auth-card-wrapper {
-    min-height: 100vh;
-  }
-}
 
 /* =========================
    AUTH CONTAINER
