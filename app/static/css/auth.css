@@ -115,25 +115,35 @@
   justify-content: center;
   line-height: 1;
 }
+@media (max-width: 991px) {
 
-@media (max-width: 576px) {
+  .auth-header {
+    display: none;
+  }
 
-  .auth-card-wrapper {
+  /* REMOVE GRID NO MOBILE */
+  .auth-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
     padding: 16px;
   }
 
+  .auth-visual {
+    display: none;
+  }
+
+  .auth-card-wrapper {
+    width: 100%;
+    padding: 0;
+    align-items: center;
+    justify-content: center;
+  }
+
   .auth-card {
-    max-width: 100%;
-    padding: 20px;
-    border-radius: 12px;
+    width: 100%;
+    max-width: 380px;
+    padding: 24px;
   }
-
-  .auth-card h4 {
-    font-size: 1.25rem;
-  }
-
-  .auth-card small {
-    font-size: 0.9rem;
-  }
-
 }
