@@ -30,19 +30,6 @@
   gap: 10px;
 }
 
-/* =========================
-   AUTH CONTAINER
-========================= */
-
-.auth-container {
-  display: grid;
-  grid-template-columns: 1.2fr 1fr;
-  min-height: calc(100vh - 64px);
-}
-
-.auth-visual {
-  background: url("/static/images/auth-bg.jpg") center/cover no-repeat;
-}
 
 .auth-card-wrapper {
   display: flex;
@@ -87,13 +74,27 @@
   }
 }
 
-.auth-visual {
-  background-image: url("../images/banners/desktop-ilustraction.jpg");
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+/* =========================
+   AUTH CONTAINER
+========================= */
 
-  width: 50%;
-  min-height: 100vh;
+.auth-container {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  min-height: calc(100vh - 64px);
 }
 
+/* =========================
+   VISUAL ESQUERDO
+========================= */
+
+.auth-visual {
+  background-image: url("../images/banners/desktop-ilustraction.jpg");
+  background-repeat: no-repeat;
+
+  /* AJUSTE IMPORTANTE */
+  background-size: contain;
+  background-position: center left;
+
+  padding: 40px;
+}
