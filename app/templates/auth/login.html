@@ -3,32 +3,35 @@
 
 {% block content %}
 
-<!-- ================= HEADER DESKTOP ================= -->
+<!-- HEADER DESKTOP -->
 <header class="auth-header d-none d-lg-flex">
   <div class="brand">
     <img src="{{ url_for('static', filename='images/logos/logo-sidebar-desktop.png') }}" alt="Venttos">
   </div>
 
   <div class="actions">
-    <a href="{{ url_for('auth.logout') }}" class="btn btn-outline-purple btn-sm">
+    
+    <!-- Login -->
+    <a href="{{ url_for('auth.logout') }}"
+       class="btn btn-outline-purple btn-sm">
       Fazer login
     </a>
 
+    <!-- Cadastro -->
     <button class="btn btn-outline-primary"
             data-bs-toggle="collapse"
             data-bs-target="#register">
       Cadastrar-se
     </button>
+
   </div>
 </header>
-<!-- ================= FIM HEADER ================= -->
 
 
-<!-- ================= DESKTOP ================= -->
-<div class="auth-container d-none d-lg-grid">
+<div class="auth-container">
 
-  <!-- VISUAL -->
-  <div class="auth-visual"></div>
+  <!-- IMAGEM / VISUAL -->
+  <div class="auth-visual d-none d-lg-block"></div>
 
   <!-- CARD -->
   <div class="auth-card-wrapper">
@@ -47,7 +50,7 @@
         {% endfor %}
       {% endwith %}
 
-      <!-- LOGIN -->
+      <!-- LOGIN LOCAL -->
       <form method="post" action="{{ url_for('auth.login_local') }}">
         <div class="mb-3">
           <label class="form-label">Usuário</label>
@@ -59,13 +62,13 @@
           <input type="password" name="password" class="form-control" required>
         </div>
 
-        <button class="btn btn-primary w-100 mb-3">Entrar</button>
+        <button class="btn btn-primary w-100 mb-3">
+          Entrar
+        </button>
       </form>
 
       <div class="text-center mb-3">
-        <button class="btn btn-link p-0"
-                data-bs-toggle="collapse"
-                data-bs-target="#register">
+        <button class="btn btn-link p-0" data-bs-toggle="collapse" data-bs-target="#register">
           Cadastrar-se
         </button>
       </div>
@@ -73,6 +76,7 @@
       <!-- CADASTRO -->
       <div id="register" class="collapse">
         <form method="post" action="{{ url_for('auth.register') }}">
+
           <input name="full_name" class="form-control mb-2" placeholder="Nome completo" required>
           <input name="matricula" class="form-control mb-2" placeholder="Matrícula" required>
 
@@ -89,95 +93,37 @@
           <input type="password" name="password" class="form-control mb-2" placeholder="Senha" required>
           <input type="password" name="password_confirm" class="form-control mb-3" placeholder="Confirmar senha" required>
 
-          <button class="btn btn-outline-primary w-100">Cadastrar</button>
+          <button class="btn btn-outline-primary w-100">
+            Cadastrar
+          </button>
         </form>
       </div>
 
       <hr>
 
-      <!-- OAUTH -->
-      <div class="d-grid gap-2 mb-4">
-        <a href="{{ url_for('auth.login_google') }}" class="btn btn-outline-danger">
-          <i class="bi bi-google me-2"></i> Google
-        </a>
+    <!-- OAUTH -->
+    <div class="d-grid gap-2 mb-4">
+      <a href="{{ url_for('auth.login_google') }}" class="btn btn-outline-danger">
+        <i class="bi bi-google me-2"></i> Google
+      </a>
+    
+      <a href="{{ url_for('auth.login_github') }}" class="btn btn-outline-dark">
+        <i class="bi bi-github me-2"></i> GitHub
+      </a>
+    </div>
+    
+    <div class="text-center mt-3">
+      <small class="fw-semibold d-block">
+        EDUARDO LIBÓRIO
+      </small>
+      <small class="text-muted">
+        Junior Backend Developer
+      </small>
+    </div>
 
-        <a href="{{ url_for('auth.login_github') }}" class="btn btn-outline-dark">
-          <i class="bi bi-github me-2"></i> GitHub
-        </a>
-      </div>
-
-      <div class="text-center mt-3">
-        <small class="fw-semibold d-block">EDUARDO LIBÓRIO</small>
-        <small class="text-muted">Junior Backend Developer</small>
-      </div>
 
     </div>
   </div>
-</div>
-<!-- ================= FIM DESKTOP ================= -->
-
-
-<!-- ================= MOBILE ================= -->
-<div class="mobile-auth d-lg-none">
-
-  <!-- TELA 1 -->
-  <section class="mobile-screen"
-           style="background-image: url('{{ url_for('static', filename='images/banners/bg-cad-log.png') }}')">
-    <div class="mobile-actions">
-      <button class="btn btn-primary w-100 mb-3"
-              data-bs-toggle="collapse"
-              data-bs-target="#mobile-register">
-        Cadastrar-se
-      </button>
-
-      <button class="btn btn-outline-light w-100"
-              data-bs-toggle="collapse"
-              data-bs-target="#mobile-login">
-        Entrar
-      </button>
-    </div>
-  </section>
-
-  <!-- LOGIN -->
-  <section id="mobile-login"
-           class="collapse mobile-screen"
-           style="background-image: url('{{ url_for('static', filename='images/banners/bg-log-pass.png') }}')">
-    <form method="post" action="{{ url_for('auth.login_local') }}" class="mobile-form">
-      <input name="username" class="form-control mb-3" placeholder="Usuário" required>
-      <input type="password" name="password" class="form-control mb-3" placeholder="Senha" required>
-      <button class="btn btn-primary w-100 mb-3">Entrar</button>
-
-      <a href="{{ url_for('auth.login_google') }}" class="btn btn-outline-danger w-100 mb-2">Google</a>
-      <a href="{{ url_for('auth.login_github') }}" class="btn btn-outline-dark w-100">GitHub</a>
-    </form>
-  </section>
-
-  <!-- CADASTRO -->
-  <section id="mobile-register"
-           class="collapse mobile-screen"
-           style="background-image: url('{{ url_for('static', filename='images/banners/bg-cad-form.png') }}')">
-    <form method="post" action="{{ url_for('auth.register') }}" class="mobile-form">
-      <input name="full_name" class="form-control mb-2" placeholder="Nome completo" required>
-      <input name="matricula" class="form-control mb-2" placeholder="Matrícula" required>
-
-      <select name="setor" class="form-select mb-2" required>
-        <option value="">Setor</option>
-        <option>Direção</option>
-        <option>Engenharia</option>
-        <option>PCP</option>
-        <option>Produção</option>
-        <option>TI</option>
-      </select>
-
-      <input type="email" name="email" class="form-control mb-2" placeholder="Email" required>
-      <input type="password" name="password" class="form-control mb-2" placeholder="Senha" required>
-      <input type="password" name="password_confirm" class="form-control mb-3" placeholder="Confirmar senha" required>
-
-      <button class="btn btn-outline-light w-100">Cadastrar</button>
-    </form>
-  </section>
 
 </div>
-<!-- ================= FIM MOBILE ================= -->
-
 {% endblock %}
