@@ -100,25 +100,26 @@
 
       <hr>
 
-      <!-- OAUTH -->
-      <div class="d-grid gap-2">
-        <a href="{{ url_for('auth.login_google') }}" class="btn btn-outline-danger">
-          <i class="bi bi-google me-2"></i> Google
-        </a>
+    <!-- OAUTH -->
+    <div class="d-grid gap-2 mb-4">
+      <a href="{{ url_for('auth.login_google') }}" class="btn btn-outline-danger">
+        <i class="bi bi-google me-2"></i> Google
+      </a>
+    
+      <a href="{{ url_for('auth.login_github') }}" class="btn btn-outline-dark">
+        <i class="bi bi-github me-2"></i> GitHub
+      </a>
+    </div>
+    
+    <div class="text-center mt-3">
+      <small class="fw-semibold d-block">
+        EDUARDO LIBÓRIO
+      </small>
+      <small class="text-muted">
+        Junior Backend Developer
+      </small>
+    </div>
 
-        <a href="{{ url_for('auth.login_github') }}" class="btn btn-outline-dark">
-          <i class="bi bi-github me-2"></i> GitHub
-        </a>
-      </div
-        
-      <div class="text-center mt-4">
-        <small class="fw-semibold d-block">
-          EDUARDO LIBÓRIO
-        </small>
-        <small class="text-muted">
-          Junior Backend Developer
-        </small>
-      </div>
 
     </div>
   </div>
