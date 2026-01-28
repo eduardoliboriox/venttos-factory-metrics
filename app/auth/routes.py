@@ -5,6 +5,8 @@ from app.auth.service import get_or_create_user, register_user, authenticate_loc
 from app.auth.models import User
 from app.auth.repository import list_pending_users, approve_user, deny_user, list_all_users
 from app.auth.decorators import admin_required
+from user_agents import parse
+
 
 bp = Blueprint("auth", __name__)
 oauth = OAuth()
@@ -34,7 +36,15 @@ def setup_oauth(state):
 
 @bp.route("/login")
 def login():
+    user_agent = parse(request.headers.get("User-Agent", ""))
+
+    # Mobile (celular)
+    if user_agent.is_mobile:
+        return redirect(url_for("auth.login_mobile_choice"))
+
+    # Desktop
     return render_template("auth/login.html")
+
 
 @bp.route("/login/google")
 def login_google():
