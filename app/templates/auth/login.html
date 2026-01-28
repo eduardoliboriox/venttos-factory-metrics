@@ -12,14 +12,10 @@
   <div class="actions">
     
     <!-- Login -->
-    <button class="btn btn-outline-primary"
-            type="button"
-            data-bs-toggle="collapse"
-            data-bs-target="#register"
-            aria-expanded="false">
+    <a href="{{ url_for('auth.login_local') }}"
+       class="btn btn-outline-primary btn-sm">
       Fazer login
-    </button>
-
+    </a>
 
     <!-- Cadastro -->
     <button class="btn btn-outline-primary"
