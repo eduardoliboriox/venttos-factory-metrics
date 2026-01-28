@@ -1,0 +1,88 @@
+/* =========================
+   AUTH LAYOUT
+========================= */
+
+.auth-body {
+  background: linear-gradient(135deg, #f8f9fa, #eef2f7);
+  min-height: 100vh;
+}
+
+/* =========================
+   HEADER AUTH (DESKTOP)
+========================= */
+
+.auth-header {
+  height: 64px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0,0,0,.08);
+  display: flex;
+  align-items: center;
+  padding: 0 24px;
+}
+
+.auth-header .brand img {
+  height: 42px;
+}
+
+.auth-header .actions {
+  margin-left: auto;
+  display: flex;
+  gap: 10px;
+}
+
+/* =========================
+   AUTH CONTAINER
+========================= */
+
+.auth-container {
+  display: grid;
+  grid-template-columns: 1.2fr 1fr;
+  min-height: calc(100vh - 64px);
+}
+
+.auth-visual {
+  background: url("/static/images/auth-bg.jpg") center/cover no-repeat;
+}
+
+.auth-card-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+}
+
+/* =========================
+   CARD LOGIN
+========================= */
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 28px;
+  box-shadow: 0 20px 40px rgba(0,0,0,.08);
+}
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 991px) {
+
+  .auth-header {
+    display: none;
+  }
+
+  .auth-container {
+    grid-template-columns: 1fr;
+  }
+
+  .auth-visual {
+    display: none;
+  }
+
+  .auth-card-wrapper {
+    min-height: 100vh;
+  }
+}
