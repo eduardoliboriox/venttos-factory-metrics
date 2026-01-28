@@ -317,7 +317,7 @@ body.fullscreen-mode .content {
 }
 
   #pcpTurnos {
-    font-size: 1.05rem; /* texto acompanha o checkbox */
+    font-size: 1.05rem; 
   }
 }
 
@@ -326,8 +326,8 @@ body.fullscreen-mode .content {
 ========================= */
 
 .kpi-card h4 {
-  font-size: 2.1rem;      /* destaque forte */
-  font-weight: 600;      /* visual executivo */
+  font-size: 2.1rem;     
+  font-weight: 600;      
   margin-top: 6px;
 }
 
@@ -347,7 +347,7 @@ body.fullscreen-mode .content {
 .mobile-right {
   display: flex;
   align-items: center;
-  gap: 8px; /* username perto do botão, mas sem colar */
+  gap: 8px; 
 }
 
 
