@@ -156,3 +156,18 @@ def admin_users_all():
     users = list_all_users(search)
     return render_template("auth/users_all.html", users=users)
 
+
+# experiência login mobile 
+@bp.route("/login/mobile")
+def login_mobile_choice():
+    return render_template("auth/mobile/login_choice.html")
+
+
+@bp.route("/login/mobile/form")
+def login_mobile_form():
+    return render_template("auth/mobile/login_form.html")
+
+
+@bp.route("/register/mobile")
+def register_mobile_form():
+    return render_template("auth/mobile/register_form.html")
