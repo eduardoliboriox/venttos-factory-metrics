@@ -86,3 +86,14 @@
     min-height: 100vh;
   }
 }
+
+.auth-visual {
+  background-image: url("../images/auth/auth-visual.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+
+  width: 50%;
+  min-height: 100vh;
+}
+
