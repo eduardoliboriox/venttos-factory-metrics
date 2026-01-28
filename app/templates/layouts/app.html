@@ -26,7 +26,7 @@
     <span class="username fw-bold">Factory Metrics</span>
 
     {% if current_user.is_authenticated %}
-      <span class="username fw-semibold ms-2">
+      <span class="username fw-semibold ms-2 text-primary">
         {{ current_user.username }}
       </span>
     {% endif %}
@@ -35,7 +35,7 @@
   {% if current_user.is_authenticated %}
   <div class="mobile-right">
     <a href="{{ url_for('auth.logout') }}"
-       class="btn btn-sm btn-outline-secondary">
+       class="btn btn-sm btn-outline-dark">
       Sair
     </a>
   </div>
