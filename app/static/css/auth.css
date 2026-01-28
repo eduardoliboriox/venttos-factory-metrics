@@ -129,3 +129,32 @@
     padding: 24px;
   }
 }
+
+/* =========================
+   MOBILE AUTH EXPERIENCE
+========================= */
+
+.mobile-auth {
+  height: 100vh;
+  width: 100%;
+}
+
+.mobile-screen {
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  padding: 24px;
+  display: flex;
+  align-items: flex-end;
+}
+
+.mobile-actions {
+  width: 100%;
+}
+
+.mobile-form {
+  width: 100%;
+  background: rgba(255,255,255,.92);
+  padding: 20px;
+  border-radius: 16px;
+}
