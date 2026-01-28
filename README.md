@@ -1,13 +1,13 @@
 # Venttos – Factory Metrics
 
-**Venttos – Factory Metrics** é um sistema web de **inteligência operacional industrial**, desenvolvido para **engenharia, produção, PCP e liderança**, com foco em **controle de absenteísmo**, **análise de headcount**, **indicadores executivos** e **visualização de dados no estilo Power BI**.
+**Venttos – Factory Metrics** é um sistema web de **inteligência operacional industrial**, desenvolvido para **engenharia, produção, PCP, RH e liderança**, com foco em **controle de absenteísmo**, **análise de headcount**, **indicadores executivos** e **visualização de dados inspirada no Power BI**.
 
-O projeto foi pensado para **uso real em ambiente fabril**, priorizando:
+O projeto foi concebido para **uso real em ambiente fabril**, priorizando:
 
-* **confiabilidade dos dados**
-* **baixo erro operacional**
-* **leitura executiva**
-* **arquitetura limpa e escalável**
+* Confiabilidade dos dados
+* Baixo erro operacional
+* Leitura executiva clara
+* Arquitetura limpa, escalável e de fácil manutenção
 
 ---
 
@@ -19,7 +19,38 @@ O projeto foi pensado para **uso real em ambiente fabril**, priorizando:
 * **Dashboard operacional**
 * **Visão executiva estilo Power BI**
 * **Relatórios analíticos sob demanda**
-* Base sólida para decisões de **PCP, RH e Produção**
+* Base sólida para decisões de **PCP, RH, Produção e Diretoria**
+
+---
+
+## 🔐 Autenticação & Controle de Acesso
+
+O sistema possui **autenticação completa**, com múltiplos provedores e controle administrativo.
+
+### Métodos de login suportados
+
+* ✅ **Login local (usuário e senha)**
+* ✅ **Google OAuth 2.0**
+* ✅ **GitHub OAuth**
+
+### Cadastro de usuários (login local)
+
+* Usuários podem se **cadastrar via formulário**
+* Novos usuários entram como **pendentes**
+* Apenas **administradores** podem aprovar ou negar acessos
+* O **primeiro usuário do sistema** é criado automaticamente como **admin**
+
+### Controle de permissões
+
+* Autenticação via **Flask-Login**
+* Decorators para rotas administrativas
+* Separação clara entre:
+
+  * Usuários ativos
+  * Usuários pendentes
+  * Administradores
+
+📌 *Objetivo:* garantir segurança, rastreabilidade e controle de acesso em ambiente corporativo.
 
 ---
 
@@ -29,8 +60,9 @@ O projeto foi pensado para **uso real em ambiente fabril**, priorizando:
 * Eliminação de digitação manual crítica
 * Dados padronizados (menos ruído, mais decisão)
 * **Services** concentram regras de negócio
-* **Repositories / SQL isolado**
+* **Repositories isolam SQL**
 * **Rotas HTML separadas de rotas REST (API)**
+* Autenticação desacoplada da lógica de domínio
 * Arquitetura inspirada em **DDD leve + Clean Architecture**
 
 ---
@@ -58,11 +90,11 @@ O projeto foi pensado para **uso real em ambiente fabril**, priorizando:
 * KPIs consolidados de absenteísmo
 * Indicadores por período
 * Base operacional para acompanhamento diário
-* Cards claros e leitura rápida
+* Cards objetivos e leitura rápida
 
 ---
 
-### 📈 Power BI (Visão Executiva)
+### 📈 Power BI – Visão Executiva
 
 Tela dedicada com **experiência inspirada no Power BI**, sem dependência externa:
 
@@ -70,12 +102,11 @@ Tela dedicada com **experiência inspirada no Power BI**, sem dependência exter
 * Ranking de linhas por absenteísmo
 * Gráficos de barras verticais (ranking)
 * Gráficos horizontais (distribuição)
-* Interação com **clique nas barras**
+* Interação por **clique nas barras**
 * **Mini-modal analítico por linha**
-* Visual consistente, escuro, corporativo
-* Preparado para leitura por **diretoria e gerência**
+* Visual corporativo, escuro e consistente
 
-📌 *Objetivo:* permitir decisão rápida sem precisar abrir ferramentas externas.
+📌 *Objetivo:* permitir decisão rápida sem abrir ferramentas externas.
 
 ---
 
@@ -94,18 +125,16 @@ Tela exclusiva para geração de relatórios:
 * Cálculo de **percentual de impacto dentro da linha**
 * Texto analítico pronto para leitura executiva
 
-📌 *Objetivo:* apoiar reuniões, apresentações e decisões estratégicas.
-
 ---
 
 ## 📱 Interface & UX
 
 * Totalmente responsiva
 * Desktop e mobile
+* Login mobile com **fluxo próprio**
 * Layout mobile inspirado em **app nativo**
 * Sidebar no desktop
-* Cards claros e leitura objetiva
-* Hierarquia visual pensada para dados
+* Hierarquia visual focada em dados e decisão
 
 ---
 
@@ -113,20 +142,29 @@ Tela exclusiva para geração de relatórios:
 
 * Deploy em **Railway**
 * Banco **PostgreSQL**
-* Gunicorn (produção)
+* Gunicorn em produção
 * Variáveis de ambiente via `.env`
-* Pronto para CI/CD
+* Estrutura pronta para CI/CD
 
 ---
 
 ## 🧱 Estrutura do Projeto
 
 ```text
+
 project/
 ├─ app/
 │   ├─ __init__.py            # create_app()
 │   ├─ config.py              # Configurações / env
 │   ├─ extensions.py          # DB (psycopg)
+│   │
+│   ├─ auth/
+│   │   ├─ __init__.py   (vazio)
+│   │   ├─ decorators.py
+│   │   ├─ models.py
+│   │   ├─ repository.py
+│   │   ├─ routes.py
+│   │   └─ service.py
 │   │
 │   ├─ repositories/          # Acesso ao banco (SQL)
 │   │   ├─ __init__.py
@@ -152,18 +190,33 @@ project/
 │   │   └─ relatorios_service.py
 │   │
 │   ├─ templates/             # Jinja2
+│   │   ├─ auth/
+│   │   │   ├─ login.html  
+│   │   │   └─ users_admin.html
+│   │   │   └─ users_all.html 
+│   │   │
+│   │   ├─ layouts/
+│   │   │   ├─ mobile/
+│   │   │   │    └─ login_choice.html
+│   │   │   │    └─ login_form.htm
+│   │   │   │    └─ register_form.htm
+│   │   │   │      
+│   │   │   └─ app.html
+│   │   │   └─ auth.html
+│   │   │
 │   │   ├─ atestados.html
-│   │   ├─ base.html
+│   │   ├─ base.html    (vou apagar, conteudo passou para app.html)
 │   │   ├─ cargos.html
 │   │   ├─ dashboard.html
 │   │   ├─ hclinhas.html
 │   │   ├─ inicio.html
 │   │   ├─ lancamento.html
 │   │   ├─ powerbi.html
-│   │   └─ relatorios.html
+│   │   ├─ relatorios.html
 │   │
 │   └─ static/
 │       ├─ css/
+│       │   ├─ auth.css
 │       │   ├─ powerbi.css
 │       │   └─ style.css
 │       │
@@ -196,6 +249,8 @@ project/
 
 * Python 3
 * Flask
+* Flask-Login
+* Authlib (OAuth)
 * Jinja2
 * HTML5 / CSS3
 * JavaScript (Vanilla)
@@ -205,7 +260,7 @@ project/
 
 ---
 
-## ▶️ Como Rodar o Projeto Localmente
+## ▶️ Como Rodar Localmente
 
 ### 1️⃣ Clonar o repositório
 
@@ -214,12 +269,11 @@ git clone https://github.com/seu-usuario/venttos-factory-metrics.git
 cd venttos-factory-metrics
 ```
 
-### 2️⃣ Criar e ativar o ambiente virtual
+### 2️⃣ Criar ambiente virtual
 
 ```bash
 python -m venv venv
-venv\Scripts\activate  # Windows
-# source venv/bin/activate  # Linux / Mac
+venv\Scripts\activate
 ```
 
 ### 3️⃣ Instalar dependências
@@ -228,17 +282,20 @@ venv\Scripts\activate  # Windows
 pip install -r requirements.txt
 ```
 
-### 4️⃣ Configurar variáveis de ambiente
-
-Crie um arquivo `.env` na raiz:
+### 4️⃣ Configurar `.env`
 
 ```env
-FLASK_ENV=development
 SECRET_KEY=supersecretkey
 DATABASE_URL=postgresql://user:password@localhost:5432/dbname
+
+GOOGLE_CLIENT_ID=
+GOOGLE_CLIENT_SECRET=
+
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
 ```
 
-### 5️⃣ Executar a aplicação
+### 5️⃣ Executar
 
 ```bash
 python run.py
@@ -252,31 +309,16 @@ http://127.0.0.1:5000
 
 ---
 
-## 📌 Observações
-
-* Não possui autenticação (por enquanto)
-* Foco em uso interno / industrial
-* Estrutura pronta para escalar
-* Código organizado para fácil manutenção
-
----
-
-## 🚀 Deploy
-
-* Deploy contínuo via **Railway**
-* Uso de `Procfile`
-* Banco PostgreSQL gerenciado
-
----
-
 ## 👨‍💻 Autor
 
 Desenvolvido por **Eduardo Libório**
+Junior Backend Developer
 
-📧 [eduardosoleno@protonmail.com](mailto:eduardosoleno@protonmail.com)
+📧 [eduardosolenomorizliborio@gmail.com](mailto:eduardosolenomorizliborio@gmail.com)
 
 ---
 
 ## 📄 Licença
 
-Projeto de uso privado / interno.
+Projeto de uso **privado / interno**.
+
