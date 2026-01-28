@@ -2,7 +2,7 @@
 <html lang="pt-br">
 <head>
   <meta charset="utf-8">
-  <title>{% block title %}Login{% endblock %}</title>
+  <title>{% block title %}Acesso{% endblock %}</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <!-- Bootstrap -->
@@ -11,9 +11,11 @@
 
   <!-- CSS base -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <!-- CSS auth -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
 </head>
 
-<body class="bg-light">
+<body class="auth-body">
 
   {% block content %}{% endblock %}
 
