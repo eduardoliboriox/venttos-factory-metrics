@@ -205,7 +205,6 @@ project/
 │   │   │   └─ auth.html
 │   │   │
 │   │   ├─ atestados.html
-│   │   ├─ base.html    (vou apagar, conteudo passou para app.html)
 │   │   ├─ cargos.html
 │   │   ├─ dashboard.html
 │   │   ├─ hclinhas.html
