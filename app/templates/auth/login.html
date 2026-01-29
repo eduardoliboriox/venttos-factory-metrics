@@ -10,6 +10,13 @@
   </div>
 
   <div class="actions">
+
+    <!-- Login -->
+    <a href="{{ url_for('auth.logout') }}"
+       class="btn btn-outline-purple btn-sm">
+      Fazer login
+    </a>
+    
     <button class="btn btn-outline-primary"
             data-bs-toggle="collapse"
             data-bs-target="#register">
