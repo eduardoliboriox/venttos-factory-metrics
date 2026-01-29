@@ -146,13 +146,13 @@
     background-color: #f8f9fa;
   }
 
-  .auth-container {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 16px;
-  }
+   .auth-container {
+     display: flex;
+     align-items: center;
+     justify-content: center;
+     min-height: calc(100vh - 64px);
+     padding: 64px;
+   }
 
   .auth-visual {
     display: none;
@@ -187,12 +187,3 @@
   border-color: #ced4da;
 }
 
-/* ==================================================
-   CENTRALIZAÇÃO REAL DO CARD (DESKTOP)
-================================================== */
-
-.auth-container-centered {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
