@@ -14,7 +14,7 @@
 
     {% if current_user.is_authenticated and current_user.is_admin %}
     <a href="{{ url_for('auth.admin_users_all') }}"
-       class="btn btn-outline-sucess">
+       class="btn btn-outline-sucess active">
       <i class="bi bi-shield-lock"></i> Todos os usuários
     </a>
     {% endif %}
