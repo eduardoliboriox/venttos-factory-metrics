@@ -490,5 +490,18 @@ async function abrirModalFerias(linha) {
 }
 </script>
 
+<script>
+function toggleFullscreen() {
+  if (!document.fullscreenElement) {
+    document.documentElement.requestFullscreen();
+  } else {
+    if (document.exitFullscreen) {
+      document.exitFullscreen();
+    }
+  }
+}
+</script>
+
+
 <script src="{{ url_for('static', filename='js/dashboard-live.js') }}"></script>
 {% endblock %}
