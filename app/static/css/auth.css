@@ -46,7 +46,7 @@
 
 .auth-container {
   display: grid;
-  grid-template-columns: 1.2fr 1fr;
+  grid-template-columns: 1.4fr 1fr;
   min-height: calc(100vh - 64px);
 }
 
@@ -70,12 +70,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 32px;
+  padding: 48px;
 }
 
 .auth-card {
   width: 100%;
-  max-width: 420px;
+  max-width: 560px;
   background: #ffffff;
   border-radius: 14px;
   padding: 28px;
