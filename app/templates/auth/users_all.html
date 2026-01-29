@@ -14,7 +14,7 @@
     </a>
     
     <a href="{{ url_for('auth.admin_users') }}" class="btn btn-outline-primary">
-      <i class="bi bi-arrow-left"></i> Usuários pendentes
+      <i class="bi bi-shield-lock"></i> Usuários pendentes
     </a>
 
     {% if current_user.is_authenticated and current_user.is_admin %}
