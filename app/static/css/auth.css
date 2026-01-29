@@ -167,3 +167,32 @@
     padding: 24px;
   }
 }
+
+/* ==================================================
+   LOGIN – INPUTS COM ÍCONE
+================================================== */
+
+.auth-input .input-group-text {
+  background-color: #fff;
+  border-right: none;
+  color: #6c757d;
+}
+
+.auth-input .form-control {
+  border-left: none;
+}
+
+.auth-input .form-control:focus {
+  box-shadow: none;
+  border-color: #ced4da;
+}
+
+/* ==================================================
+   CENTRALIZAÇÃO REAL DO CARD (DESKTOP)
+================================================== */
+
+.auth-container-centered {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
