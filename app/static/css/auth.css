@@ -202,4 +202,16 @@
   max-width: 560px;
 }
 
+.auth-container-centered .auth-card-wrapper {
+  width: 100%;
+  max-width: 560px;  
+  padding: 32px;
+}
+
+.auth-container-centered .auth-card {
+  width: 100%;
+  max-width: none;   
+}
+
+
 
