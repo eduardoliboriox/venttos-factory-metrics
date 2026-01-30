@@ -68,7 +68,7 @@ def login_github():
         url_for("auth.github_callback", _external=True)
     )
 
-@bp.route("/auth/github/callback")
+@bp.route("/github/callback")
 def github_callback():
     token = oauth.github.authorize_access_token()
     resp = oauth.github.get("user")
