@@ -214,6 +214,42 @@
   max-width: none;   
 }
 
+/* ==================================================
+   MOBILE – BACKGROUND COM FADE SUAVE
+================================================== */
+
+.mobile-screen {
+  position: relative;
+  min-height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(180deg, #0f172a, #020617);
+}
+
+/* camada real da imagem */
+.mobile-screen::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: var(--bg-image);
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transition: opacity 0.6s ease-in-out;
+  will-change: opacity;
+  z-index: 0;
+}
+
+/* quando a imagem terminou de carregar */
+.mobile-screen.is-loaded::before {
+  opacity: 1;
+}
+
+/* conteúdo sempre acima */
+.mobile-screen > * {
+  position: relative;
+  z-index: 1;
+}
+
 
 
 
