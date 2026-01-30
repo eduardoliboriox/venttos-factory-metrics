@@ -214,43 +214,7 @@
   max-width: none;   
 }
 
-/* ==================================================
-   MOBILE – LOGIN / REGISTER (VERSÃO BOA)
-================================================== */
 
-.mobile-screen {
-  position: relative;
-  min-height: 100vh;
-  overflow: hidden;
-  background-color: #020617;
-  display: flex;
-  align-items: flex-end;
-  padding: 24px;
-}
-
-/* imagem REAL */
-.mobile-bg {
-  position: absolute;
-  inset: 0;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  z-index: 0;
-}
-
-/* formulário por cima */
-.mobile-form,
-.mobile-actions {
-  position: relative;
-  z-index: 1;
-  width: 100%;
-  max-width: 420px;
-  margin: 0 auto;
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(2px);
-  padding: 24px;
-  border-radius: 14px;
-}
 
 
 
