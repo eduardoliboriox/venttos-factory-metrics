@@ -8,7 +8,6 @@ def _formatar_data_br(d: date) -> str:
     """Formata data para padrão brasileiro DD-MM-YYYY"""
     return d.strftime("%d-%m-%Y")
 
-
 def gerar_relatorio(setor, tipo):
     hoje = date.today()
 
