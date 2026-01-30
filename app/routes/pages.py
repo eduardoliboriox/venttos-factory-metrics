@@ -112,7 +112,6 @@ def hc_linhas():
         active_menu="cargos"  
     )
 
-
 @bp.route("/lancamento/atestados")
 @login_required
 def atestados():
@@ -129,12 +128,3 @@ def atestados():
 @bp.route("/login")
 def login():
     return render_template("auth/login.html")
-
-
-
-
-
-
-
-
-
