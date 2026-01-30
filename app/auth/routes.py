@@ -46,7 +46,6 @@ def login():
     return render_template("auth/login.html")
 
 # OAuth Google
-
 @bp.route("/login/google")
 def login_google():
     return oauth.google.authorize_redirect(
@@ -90,8 +89,6 @@ def github_callback():
 
     return redirect(url_for("pages.dashboard"))
 
-
-
 @bp.route("/logout")
 def logout():
     logout_user()
@@ -129,7 +126,6 @@ def register():
 
     return redirect(url_for("auth.login"))
 
-
 @bp.route("/admin/users")
 @login_required
 @admin_required
@@ -159,7 +155,6 @@ def reject_user_route(user_id):
     flash("Usuário removido", "info")
     return redirect(url_for("auth.admin_users"))
 
-
 @bp.route("/admin/users/all")
 @login_required
 @admin_required
@@ -171,7 +166,6 @@ def admin_users_all():
     users = list_all_users(search)
     return render_template("auth/users_all.html", users=users)
 
-
 # experiência login mobile 
 @bp.route("/login/mobile")
 def login_mobile_choice():
@@ -182,11 +176,9 @@ def login_mobile_choice():
 def login_mobile_form():
     return render_template("auth/mobile/login_form.html")
 
-
 @bp.route("/register/mobile")
 def register_mobile_form():
     return render_template("auth/mobile/register_form.html")
-
 
 @bp.route("/meu-perfil", methods=["GET", "POST"])
 @login_required
@@ -213,4 +205,3 @@ def my_profile():
         return redirect(url_for("auth.my_profile"))
 
     return render_template("auth/myperfil.html", user=user_data)
-
