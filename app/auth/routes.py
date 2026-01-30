@@ -71,8 +71,9 @@ def login_github():
         return redirect(url_for("auth.login"))
 
     return oauth.github.authorize_redirect(
-        url_for("auth.github_callback", _external=True)
+        url_for("auth.github_callback", _external=True, _scheme="https")
     )
+
 
 
 @bp.route("/github/callback")
