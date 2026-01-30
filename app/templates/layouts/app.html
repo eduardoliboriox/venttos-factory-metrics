@@ -33,11 +33,6 @@
     <span class="username fw-semibold text-secondary">
       {{ current_user.username }}
     </span>
-
-   <!--  <a href="{{ url_for('auth.logout') }}"
-       class="btn btn-sm btn-outline-secondary">
-      Sair
-    </a>-->
     
     {% if current_user.is_authenticated %}
     <a href="{{ url_for('auth.logout') }}"
