@@ -66,9 +66,14 @@ def google_callback():
 # OAuth Github
 @bp.route("/login/github")
 def login_github():
+    if not current_app.config.get("GITHUB_CLIENT_ID"):
+        flash("Login com GitHub indisponível no momento", "warning")
+        return redirect(url_for("auth.login"))
+
     return oauth.github.authorize_redirect(
         url_for("auth.github_callback", _external=True)
     )
+
 
 @bp.route("/github/callback")
 def github_callback():
