@@ -68,13 +68,12 @@ def login_github():
         url_for("auth.github_callback", _external=True)
     )
 
-@bp.route("/auth/github")
+@bp.route("/auth/github/callback")
 def github_callback():
     token = oauth.github.authorize_access_token()
     resp = oauth.github.get("user")
     profile = resp.json()
 
-    # email no GitHub pode vir separado
     if not profile.get("email"):
         emails = oauth.github.get("user/emails").json()
         primary = next(e for e in emails if e["primary"])
@@ -84,6 +83,7 @@ def github_callback():
     login_user(User(user_data))
 
     return redirect(url_for("pages.dashboard"))
+
 
 @bp.route("/logout")
 def logout():
