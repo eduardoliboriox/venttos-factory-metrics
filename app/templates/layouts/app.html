@@ -80,6 +80,11 @@
        class="{% if active_menu == 'cargos' or request.endpoint == 'pages.cargos' %}active{% endif %}">
       <i class="bi bi-database"></i> Database
     </a>
+
+    <a href="{{ url_for('auth.my_profile') }}"
+       <i class="bi bi-person-circle"></i> Meu Perfil
+    </a>
+        
   </nav>
 
 
