@@ -117,13 +117,26 @@
 
       <!-- OAUTH -->
       <div class="d-grid gap-2 mb-4">
+        {% if config.GOOGLE_CLIENT_ID %}
         <a href="{{ url_for('auth.login_google') }}" class="btn btn-outline-danger">
           <i class="bi bi-google me-2"></i> Google
         </a>
+        {% else %}
+        <button class="btn btn-outline-danger" disabled>
+          <i class="bi bi-google me-2"></i> Google (em breve)
+        </button>
+        {% endif %}
 
-        <a href="{{ url_for('auth.login_github') }}" class="btn btn-outline-dark">
-          <i class="bi bi-github me-2"></i> GitHub
+
+        {% if config.GOOGLE_CLIENT_ID %}
+        <a href="{{ url_for('auth.login_google') }}" class="btn btn-outline-danger">
+          <i class="bi bi-google me-2"></i> Google
         </a>
+        {% else %}
+        <button class="btn btn-outline-danger" disabled>
+          <i class="bi bi-google me-2"></i> Google (em breve)
+        </button>
+        {% endif %}
       </div>
 
       <div class="text-center mt-3">
