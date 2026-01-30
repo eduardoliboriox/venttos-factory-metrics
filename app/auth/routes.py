@@ -45,6 +45,7 @@ def login():
     # Desktop
     return render_template("auth/login.html")
 
+# OAuth Google
 
 @bp.route("/login/google")
 def login_google():
@@ -62,6 +63,7 @@ def google_callback():
 
     return redirect(url_for("pages.dashboard"))
 
+# OAuth Github
 @bp.route("/login/github")
 def login_github():
     return oauth.github.authorize_redirect(
@@ -85,12 +87,11 @@ def github_callback():
     return redirect(url_for("pages.dashboard"))
 
 
+
 @bp.route("/logout")
 def logout():
     logout_user()
     return redirect(url_for("auth.login"))
-
-
 
 @bp.route("/login/local", methods=["POST"])
 def login_local():
