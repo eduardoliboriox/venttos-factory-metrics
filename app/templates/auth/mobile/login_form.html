@@ -1,6 +1,5 @@
 {% extends "layouts/auth.html" %}
 {% block title %}Entrar{% endblock %}
-
 {% block content %}
 <section class="mobile-screen login-form"
   style="background-image:url('{{ url_for('static', filename='images/banners/bg-log-pass.jpg') }}')">
@@ -14,12 +13,7 @@
       <span class="input-group-text">
         <i class="bi bi-person"></i>
       </span>
-      <input
-        name="username"
-        class="form-control"
-        placeholder="Usuário"
-        required
-      >
+      <input name="username" class="form-control" placeholder="Usuário" required>
     </div>
 
     <!-- SENHA -->
@@ -27,13 +21,7 @@
       <span class="input-group-text">
         <i class="bi bi-lock"></i>
       </span>
-      <input
-        type="password"
-        name="password"
-        class="form-control"
-        placeholder="Senha"
-        required
-      >
+      <input type="password" name="password" class="form-control" placeholder="Senha" required>
     </div>
 
     <button class="btn btn-primary w-100 mb-3">
